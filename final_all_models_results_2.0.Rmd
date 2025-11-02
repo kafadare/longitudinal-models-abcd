@@ -835,19 +835,7 @@ cor_df$t1_t2.p_adj <- p.adjust(cor_df$t1_t2.p, method = "BH")
 cor_df$t1_long.p_adj <- p.adjust(cor_df$t1_long.p, method = "BH")
 cor_df$t2_long.p_adj <- p.adjust(cor_df$t2_long.p, method = "BH")
 ```
-###Extreme Long Centiles in t1 vs t2 plots
-Simply visualizing t1/t2 centile relationship based on longitudinal centiles.
-```{r}
-pool1 <- full.df %>% filter((smri_vol_cdk_total.t2_centiles < 0.75 & smri_vol_cdk_total.t2_centiles > 0.25) & (smri_vol_cdk_total.t1_centiles < 0.75 & smri_vol_cdk_total.t1_centiles > 0.25) & (smri_vol_cdk_total.long_centiles > 0.9 | smri_vol_cdk_total.long_centiles < 0.1))
 
-p1 <- ggplot(pool1) + geom_point(aes(x = smri_vol_cdk_total.t1_centiles, y = smri_vol_cdk_total.t2_centiles, color = smri_vol_cdk_total.long_centiles))
-p1
-
-pool2 <- full.df %>% filter((smri_vol_cdk_total.t2_centiles > 0.9 | smri_vol_cdk_total.t2_centiles < 0.1) & (smri_vol_cdk_total.t1_centiles > 0.9 | smri_vol_cdk_total.t1_centiles < 0.1) & (smri_vol_cdk_total.long_centiles < 0.75 & smri_vol_cdk_total.long_centiles > 0.25))
-
-p2 <- ggplot(pool2) + geom_point(aes(x = smri_vol_cdk_total.t1_centiles, y = smri_vol_cdk_total.t2_centiles, color = smri_vol_cdk_total.long_centiles))
-p2
-```
 ##Plot/Inspect Correlations between centile scores
 ```{r}
 ###plot
@@ -857,7 +845,7 @@ plot_data_dkt <- merge(cor_df, ggseg::dk, by = "label")
 plot_data_aseg <- merge(cor_df, ggseg::aseg, by = "label")
 
 #Setting manual limits (could match the colorbar limits between different variables)
-(t1.t2_cov_dkt_plot <- ggplot(plot_data_dkt) +
+(t1.t2_cor_dkt_plot <- ggplot(plot_data_dkt) +
   geom_brain(atlas = dk, 
              position = position_brain(hemi ~ side),
              aes(fill = t1_t2.cor)) +
@@ -9040,7 +9028,7 @@ tbv_gpch_reg_table_full.long_sig_MC[!(tbv_gpch_reg_table_full.long_sig_MC$label 
 ### -0.23 to 0.23
 ```{r}
 # Create dummy data just to generate the colorbar
-df <- data.frame(x = 1, y = 1, beta = 0)  # value within the -0.2 to 0.2 range
+df <- data.frame(x = 1, y = 1, beta = 0)
 
 scale <- ggplot(df, aes(x, y, fill = beta)) +
   geom_tile() +
@@ -9061,20 +9049,21 @@ scale <- ggplot(df, aes(x, y, fill = beta)) +
     legend.text = element_text(size = 14),
     legend.title = element_text(size = 16)
   )
+scale
 ```
-
-### -0.1 to 0
+### -1 to 1
 ```{r}
 # Create dummy data just to generate the colorbar
-df <- data.frame(x = 1, y = 1, beta = 0)  # value within the -0.2 to 0.2 range
+df <- data.frame(x = 1, y = 1, corr = 0)
 
-scale_2 <- ggplot(df, aes(x, y, fill = beta)) +
+scale_2 <- ggplot(df, aes(x, y, fill = corr)) +
   geom_tile() +
   scale_fill_gradient2(
     low = "#4878CF",
-    high = "white",
+    mid = "white",
+    high = "#D65F5F",
     midpoint = 0,
-    limits = c(-0.1, 0),
+    limits = c(-1, 1),
     guide = guide_colorbar(
       barwidth = 20,   # length of colorbar
       barheight = 1    # thickness
@@ -9082,8 +9071,11 @@ scale_2 <- ggplot(df, aes(x, y, fill = beta)) +
   ) +
   theme_void() +  # remove axes, grid, etc.
   theme(
-    legend.position = "bottom"
+    legend.position = "bottom",
+    legend.text = element_text(size = 14),
+    legend.title = element_text(size = 14)
   )
+scale_2
 ```
 #Compile all lm() stats into supplementary table
 all global volumes

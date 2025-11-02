@@ -278,7 +278,6 @@ sTwo_test_df$age <- as.numeric(sTwo_test_df$age)
 Make a table of error messages, warnings etc
 Phenotype set should not have included wmhint, those models gave errors: all wmhint models are deleted.
 ```{r}
-#save_fits = TRUE
 all_fits_filename <- paste0(fits_path, "long_fits.csv")
 if(save_fits == TRUE){
 sOne_fits <- inspect_model_fits(splitOne_folder, sOne_fits_stats_filename)
@@ -720,6 +719,7 @@ for(k in 1:(length(breaks)-1)){
   do.call("grid.arrange", c(sOne_wp_toplot[start:end], ncol=nCol))
 }
 }
+}
 ```
 ####re-select best model considering wormplot fit for each phenotype that has >5% points outside for the best BIC
 ```{r}
@@ -772,7 +772,7 @@ aggregate(pcnt ~ phenotype, data = sOne_wp_refit_table, summary)
 sOne_fits <- sOne_fits %>% group_by(phenotype) %>%
   mutate(logminBICdiff = log(BIC-min(BIC))) %>%
   mutate( minBICdiff = BIC-min(BIC)) %>%
-  mutate( BICzscore = z_score(BIC)) %>%
+  mutate( BICzscore = scale(BIC)) %>%
   mutate(BICzscorediff = BICzscore-min(BICzscore)) %>%
   ungroup()
 
@@ -781,7 +781,7 @@ sOne_wp_refit_table <- merge(sOne_wp_refit_table, sOne_fits %>% select(c("model_
 sOne_wp_refit_table <- sOne_wp_refit_table %>% group_by(phenotype) %>%
   mutate(logminNoutdiff = log(pcnt-min(pcnt))) %>%
   mutate(minNoutdiff = pcnt - min(pcnt)) %>%
-  mutate( Noutzscore = z_score(pcnt)) %>%
+  mutate( Noutzscore = scale(pcnt)) %>%
   mutate(Noutzscorediff = Noutzscore-min(Noutzscore)) %>%
   ungroup()
 
@@ -918,7 +918,7 @@ aggregate(pcnt ~ phenotype, data = sTwo_wp_refit_table, summary)
 sTwo_fits <- sTwo_fits %>% group_by(phenotype) %>%
   mutate(logminBICdiff = log(BIC-min(BIC))) %>%
   mutate( minBICdiff = BIC-min(BIC)) %>%
-  mutate( BICzscore = z_score(BIC)) %>%
+  mutate( BICzscore = scale(BIC)) %>%
   mutate(BICzscorediff = BICzscore-min(BICzscore)) %>%
   ungroup()
 
@@ -927,7 +927,7 @@ sTwo_wp_refit_table <- merge(sTwo_wp_refit_table, sTwo_fits %>% select(c("model_
 sTwo_wp_refit_table <- sTwo_wp_refit_table %>% group_by(phenotype) %>%
   mutate(logminNoutdiff = log(pcnt-min(pcnt))) %>%
   mutate(minNoutdiff = pcnt - min(pcnt)) %>%
-  mutate( Noutzscore = z_score(pcnt)) %>%
+  mutate( Noutzscore = scale(pcnt)) %>%
   mutate(Noutzscorediff = Noutzscore-min(Noutzscore)) %>%
   ungroup()
 
@@ -1194,15 +1194,15 @@ for (i in 1:length(best_models_Two)){
   sTwo_model_params_df$pheno[i] <- phenotype
    #Gather parameters
   ##mu
-  sOne_model_params_df$mu_intercept[i] <- model$mu.coefficients[["(Intercept)"]]
-  sOne_model_params_df$mu_pheno_t1[i] <- model$mu.coefficients[[2]]
-  sOne_model_params_df$mu_interscan[i] <- pull(model$mu.coefficients, "interscan_months_t1t2")
-  sOne_model_params_df$mu_age[i] <- pull(model$mu.coefficients, "age")
-  sOne_model_params_df$mu_sexM[i] <- pull(model$mu.coefficients, "sexM")
-  sOne_model_params_df$mu_agesexM[i] <- pull(model$mu.coefficients, "age:sexM")
-  sOne_model_params_df$mu_randomsite_var[i] <- model$mu.coefSmo[[1]]$sigb2
-  sOne_model_params_df$mu_randomsite_std[i] <- model$mu.coefSmo[[1]]$sigb
-  sOne_model_params_df$mu_randomsite_lambda[i] <- model$mu.coefSmo[[1]]$lambda
+  sTwo_model_params_df$mu_intercept[i] <- model$mu.coefficients[["(Intercept)"]]
+  sTwo_model_params_df$mu_pheno_t1[i] <- model$mu.coefficients[[2]]
+  sTwo_model_params_df$mu_interscan[i] <- pull(model$mu.coefficients, "interscan_months_t1t2")
+  sTwo_model_params_df$mu_age[i] <- pull(model$mu.coefficients, "age")
+  sTwo_model_params_df$mu_sexM[i] <- pull(model$mu.coefficients, "sexM")
+  sTwo_model_params_df$mu_agesexM[i] <- pull(model$mu.coefficients, "age:sexM")
+  sTwo_model_params_df$mu_randomsite_var[i] <- model$mu.coefSmo[[1]]$sigb2
+  sTwo_model_params_df$mu_randomsite_std[i] <- model$mu.coefSmo[[1]]$sigb
+  sTwo_model_params_df$mu_randomsite_lambda[i] <- model$mu.coefSmo[[1]]$lambda
   ##sigma
   sTwo_model_params_df$sigma_intercept[i] <- model$sigma.coefficients[["(Intercept)"]]
   sTwo_model_params_df$sigma_age[i] <- pull(model$sigma.coefficients, "age")
