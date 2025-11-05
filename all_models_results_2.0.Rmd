@@ -289,6 +289,11 @@ t1.full_test_df$anthroheightcalc <- ifelse(t1.full_test_df$anthroheightcalc < 30
 sum(is.na(t1.full_test_df$anthroheightcalc)) - sum(is.na(t1.full_test_df$anthroheightcalc_og)) #4 removed
 
 ```
+###encode full term as 38 weeks and 39 weeks
+```{r}
+t1.full_test_df$gestAge_38term <- ifelse(t1.full_test_df$gestAge == 40, 38, t1.full_test_df$gestAge)
+t1.full_test_df$gestAge_39term <- ifelse(t1.full_test_df$gestAge == 40, 39, t1.full_test_df$gestAge)
+```
 ##T2
 ###Define files
 ```{r}
@@ -381,6 +386,11 @@ t2.full_test_df$anthroheightcalc <- ifelse(t2.full_test_df$anthroheightcalc < 30
 sum(is.na(t2.full_test_df$anthroheightcalc)) - sum(is.na(t2.full_test_df$anthroheightcalc_og)) #4 removed
 
 ```
+###encode full term as 38 weeks and 39 weeks
+```{r}
+t2.full_test_df$gestAge_38term <- ifelse(t2.full_test_df$gestAge == 40, 38, t2.full_test_df$gestAge)
+t2.full_test_df$gestAge_39term <- ifelse(t2.full_test_df$gestAge == 40, 39, t2.full_test_df$gestAge)
+```
 ##LONG
 ###Define files
 ```{r}
@@ -457,6 +467,10 @@ long.full_test_df <- merge(long.full_test_df, t2.full_test_df %>% select(c("src_
 ####add birthweight pgs metrics from t1 table
 ```{r}
 long.full_test_df <- merge(long.full_test_df, t1.full_test_df %>% select(c("src_subject_id", "bw_pgs", "PC1", "PC2", "PC3", "PC4", "PC5", "PC5", "PC6", "PC7", "PC8", "PC9", "PC10")))
+```
+####add gestAge sensitivity from t1 table
+```{r}
+long.full_test_df <- merge(long.full_test_df, t1.full_test_df %>% select(c("src_subject_id", "gestAge_38term", "gestAge_39term")), by = "src_subject_id", all.x = TRUE)
 ```
 ##Calculate General P change between timepoints
 ###T1
@@ -1576,6 +1590,168 @@ ga_reg_table_full.t1_sig_MC[!(ga_reg_table_full.t1_sig_MC$label %in% plot_data_d
   scale_fill_gradient2(low = "#4878CF", mid = "white", high = "#D65F5F",                        limits = c(-0.23, 0.23)) +
   theme_void() +
   labs(title = "GA T1"))
+```
+###Gestational Age - 38 week sensitivity
+####linear regressions
+```{r}
+sum(!is.na(t1.full_test_df$gestAge_38term))
+ga_zscore <- z_score(t1.full_test_df$gestAge_38term)
+
+#Global phenotypes
+ga_reg_table_global.t1 <- as.data.frame(t(sapply(t1.full_test_df[, which(names(t1.full_test_df) %in% paste0(global_phenotypes, ".t1_centiles"))], function(x) {
+  x_zscore <- qnorm(x)
+  lm <- lm(x_zscore ~ ga_zscore)
+  summary <- summary(lm)
+  
+  c(ga_beta = summary$coefficients[2,1], ga_p = summary$coefficients[2,4], ga_se = summary$coefficients[2,2])
+})))
+
+ga_reg_table_global.t1$label <- name_mapping$region_name[match(sub(".t1_centiles", "", rownames(ga_reg_table_global.t1)), name_mapping$abbreviation)]
+
+ga_reg_table_global.t1_sig <- ga_reg_table_global.t1 %>% filter(ga_p < 0.05)
+ga_reg_table_global.t1$ga_p_adj <- p.adjust(ga_reg_table_global.t1$ga_p, method = "BH")
+ga_reg_table_global.t1_sig_MC <- ga_reg_table_global.t1 %>% filter(ga_p_adj < 0.05)
+
+ga_reg_table_global.t1_sig_MC
+
+#Regional phenotypes
+ga_reg_table_full.t1 <- as.data.frame(t(sapply(t1.full_test_df[, which(names(t1.full_test_df) %in% paste0(phenotypes_for_MC, ".t1_centiles"))], function(x) {
+  x_zscore <- qnorm(x)
+  lm <- lm(x_zscore ~ ga_zscore)
+  summary <- summary(lm)
+  
+  c(ga_beta = summary$coefficients[2,1], ga_p = summary$coefficients[2,4], ga_se = summary$coefficients[2,2])
+})))
+
+ga_reg_table_full.t1$label <- name_mapping$region_name[match(sub(".t1_centiles", "", rownames(ga_reg_table_full.t1)), name_mapping$abbreviation)]
+
+ga_reg_table_full.t1_sig <- ga_reg_table_full.t1 %>% filter(ga_p < 0.05)
+ga_reg_table_full.t1$ga_p_adj <- p.adjust(ga_reg_table_full.t1$ga_p, method = "BH")
+ga_reg_table_full.t1_sig_MC <- ga_reg_table_full.t1 %>% filter(ga_p_adj < 0.05)
+
+#save tables of betas
+if(save_tables == TRUE){
+  output_folder <-dkt_folder
+  save_table_full <- ga_reg_table_full.t1
+  save_table_full$hemisphere <- ifelse(grepl("lh", save_table_full$label), "L", 
+                         ifelse(grepl("rh", save_table_full$label), "R", NA))
+  save_table_full$label <- sub("^rh_|lh_", "", save_table_full$label)
+  filename_all <- paste0(output_folder, "dsk_gestAge_38term_all_t1.csv")
+  write.csv(save_table_full, filename_all)
+}
+if(save_tables == TRUE){
+output_folder <-betas_folder
+filename_global <- paste0(output_folder, "ga38term_global_t1.csv")
+filename_regional <- paste0(output_folder, "ga38term_regional_t1.csv")
+write.csv(ga_reg_table_global.t1, filename_global)
+write.csv(ga_reg_table_full.t1, filename_regional)
+}
+```
+####visualization of betas on surface maps
+```{r}
+#merge with atlas data
+plot_data_dkt <- merge(ga_reg_table_full.t1_sig_MC, ggseg::dk, by = "label")
+plot_data_aseg <- merge(ga_reg_table_full.t1_sig_MC, ggseg::aseg, by = "label")
+
+#Regions not matched in atlases
+ga_reg_table_full.t1_sig_MC[!(ga_reg_table_full.t1_sig_MC$label %in% plot_data_dkt$label) & !(ga_reg_table_full.t1_sig_MC$label %in% plot_data_aseg$label),]
+
+#Setting manual limits (could match the colorbar limits between different variables)
+(t1.ga_dkt_plot <- ggplot(plot_data_dkt) +
+  geom_brain(atlas = dk, 
+             position = position_brain(hemi ~ side),
+             aes(fill = ga_beta)) +
+  scale_fill_gradient2(low = "#4878CF", mid = "white", high = "#D65F5F", limits = c(-0.23, 0.23)) +
+  theme_void()+
+  labs(title = "GA 38 week term T1"))
+
+(t1.ga_aseg_plot <- ggplot(plot_data_aseg) +
+  geom_brain(atlas = aseg,
+             aes(fill = ga_beta)) +
+  scale_fill_gradient2(low = "#4878CF", mid = "white", high = "#D65F5F", limits = c(-0.23, 0.23)) +
+  theme_void() +
+  labs(title = "GA 38 week term T1"))
+```
+###Gestational Age - 39 week sensitivity
+####linear regressions
+```{r}
+sum(!is.na(t1.full_test_df$gestAge_39term))
+ga_zscore <- z_score(t1.full_test_df$gestAge_39term)
+
+#Global phenotypes
+ga_reg_table_global.t1 <- as.data.frame(t(sapply(t1.full_test_df[, which(names(t1.full_test_df) %in% paste0(global_phenotypes, ".t1_centiles"))], function(x) {
+  x_zscore <- qnorm(x)
+  lm <- lm(x_zscore ~ ga_zscore)
+  summary <- summary(lm)
+  
+  c(ga_beta = summary$coefficients[2,1], ga_p = summary$coefficients[2,4], ga_se = summary$coefficients[2,2])
+})))
+
+ga_reg_table_global.t1$label <- name_mapping$region_name[match(sub(".t1_centiles", "", rownames(ga_reg_table_global.t1)), name_mapping$abbreviation)]
+
+ga_reg_table_global.t1_sig <- ga_reg_table_global.t1 %>% filter(ga_p < 0.05)
+ga_reg_table_global.t1$ga_p_adj <- p.adjust(ga_reg_table_global.t1$ga_p, method = "BH")
+ga_reg_table_global.t1_sig_MC <- ga_reg_table_global.t1 %>% filter(ga_p_adj < 0.05)
+
+ga_reg_table_global.t1_sig_MC
+
+#Regional phenotypes
+ga_reg_table_full.t1 <- as.data.frame(t(sapply(t1.full_test_df[, which(names(t1.full_test_df) %in% paste0(phenotypes_for_MC, ".t1_centiles"))], function(x) {
+  x_zscore <- qnorm(x)
+  lm <- lm(x_zscore ~ ga_zscore)
+  summary <- summary(lm)
+  
+  c(ga_beta = summary$coefficients[2,1], ga_p = summary$coefficients[2,4], ga_se = summary$coefficients[2,2])
+})))
+
+ga_reg_table_full.t1$label <- name_mapping$region_name[match(sub(".t1_centiles", "", rownames(ga_reg_table_full.t1)), name_mapping$abbreviation)]
+
+ga_reg_table_full.t1_sig <- ga_reg_table_full.t1 %>% filter(ga_p < 0.05)
+ga_reg_table_full.t1$ga_p_adj <- p.adjust(ga_reg_table_full.t1$ga_p, method = "BH")
+ga_reg_table_full.t1_sig_MC <- ga_reg_table_full.t1 %>% filter(ga_p_adj < 0.05)
+
+#save tables of betas
+if(save_tables == TRUE){
+  output_folder <-dkt_folder
+  save_table_full <- ga_reg_table_full.t1
+  save_table_full$hemisphere <- ifelse(grepl("lh", save_table_full$label), "L", 
+                         ifelse(grepl("rh", save_table_full$label), "R", NA))
+  save_table_full$label <- sub("^rh_|lh_", "", save_table_full$label)
+  filename_all <- paste0(output_folder, "dsk_gestAge_39term_all_t1.csv")
+  write.csv(save_table_full, filename_all)
+}
+if(save_tables == TRUE){
+output_folder <-betas_folder
+filename_global <- paste0(output_folder, "ga39term_global_t1.csv")
+filename_regional <- paste0(output_folder, "ga39term_regional_t1.csv")
+write.csv(ga_reg_table_global.t1, filename_global)
+write.csv(ga_reg_table_full.t1, filename_regional)
+}
+```
+####visualization of betas on surface maps
+```{r}
+#merge with atlas data
+plot_data_dkt <- merge(ga_reg_table_full.t1_sig_MC, ggseg::dk, by = "label")
+plot_data_aseg <- merge(ga_reg_table_full.t1_sig_MC, ggseg::aseg, by = "label")
+
+#Regions not matched in atlases
+ga_reg_table_full.t1_sig_MC[!(ga_reg_table_full.t1_sig_MC$label %in% plot_data_dkt$label) & !(ga_reg_table_full.t1_sig_MC$label %in% plot_data_aseg$label),]
+
+#Setting manual limits (could match the colorbar limits between different variables)
+(t1.ga_dkt_plot <- ggplot(plot_data_dkt) +
+  geom_brain(atlas = dk, 
+             position = position_brain(hemi ~ side),
+             aes(fill = ga_beta)) +
+  scale_fill_gradient2(low = "#4878CF", mid = "white", high = "#D65F5F", limits = c(-0.23, 0.23)) +
+  theme_void()+
+  labs(title = "GA 39 week term T1"))
+
+(t1.ga_aseg_plot <- ggplot(plot_data_aseg) +
+  geom_brain(atlas = aseg,
+             aes(fill = ga_beta)) +
+  scale_fill_gradient2(low = "#4878CF", mid = "white", high = "#D65F5F", limits = c(-0.23, 0.23)) +
+  theme_void() +
+  labs(title = "GA 39 week term T1"))
 ```
 ###birth weight
 ####linear regressions
@@ -4299,6 +4475,168 @@ ga_reg_table_full.t2_sig_MC[!(ga_reg_table_full.t2_sig_MC$label %in% plot_data_d
   scale_fill_gradient2(low = "#4878CF", mid = "white", high = "#D65F5F",                        limits = c(-0.23, 0.23)) +
   theme_void() +
   labs(title = "GA t2"))
+```
+###Gestational Age - 38 week sensitivity
+####linear regressions
+```{r}
+sum(!is.na(t1.full_test_df$gestAge_38term))
+ga_zscore <- z_score(t1.full_test_df$gestAge_38term)
+
+#Global phenotypes
+ga_reg_table_global.t1 <- as.data.frame(t(sapply(t1.full_test_df[, which(names(t1.full_test_df) %in% paste0(global_phenotypes, ".t1_centiles"))], function(x) {
+  x_zscore <- qnorm(x)
+  lm <- lm(x_zscore ~ ga_zscore)
+  summary <- summary(lm)
+  
+  c(ga_beta = summary$coefficients[2,1], ga_p = summary$coefficients[2,4], ga_se = summary$coefficients[2,2])
+})))
+
+ga_reg_table_global.t1$label <- name_mapping$region_name[match(sub(".t1_centiles", "", rownames(ga_reg_table_global.t1)), name_mapping$abbreviation)]
+
+ga_reg_table_global.t1_sig <- ga_reg_table_global.t1 %>% filter(ga_p < 0.05)
+ga_reg_table_global.t1$ga_p_adj <- p.adjust(ga_reg_table_global.t1$ga_p, method = "BH")
+ga_reg_table_global.t1_sig_MC <- ga_reg_table_global.t1 %>% filter(ga_p_adj < 0.05)
+
+ga_reg_table_global.t1_sig_MC
+
+#Regional phenotypes
+ga_reg_table_full.t1 <- as.data.frame(t(sapply(t1.full_test_df[, which(names(t1.full_test_df) %in% paste0(phenotypes_for_MC, ".t1_centiles"))], function(x) {
+  x_zscore <- qnorm(x)
+  lm <- lm(x_zscore ~ ga_zscore)
+  summary <- summary(lm)
+  
+  c(ga_beta = summary$coefficients[2,1], ga_p = summary$coefficients[2,4], ga_se = summary$coefficients[2,2])
+})))
+
+ga_reg_table_full.t1$label <- name_mapping$region_name[match(sub(".t1_centiles", "", rownames(ga_reg_table_full.t1)), name_mapping$abbreviation)]
+
+ga_reg_table_full.t1_sig <- ga_reg_table_full.t1 %>% filter(ga_p < 0.05)
+ga_reg_table_full.t1$ga_p_adj <- p.adjust(ga_reg_table_full.t1$ga_p, method = "BH")
+ga_reg_table_full.t1_sig_MC <- ga_reg_table_full.t1 %>% filter(ga_p_adj < 0.05)
+
+#save tables of betas
+if(save_tables == TRUE){
+  output_folder <-dkt_folder
+  save_table_full <- ga_reg_table_full.t1
+  save_table_full$hemisphere <- ifelse(grepl("lh", save_table_full$label), "L", 
+                         ifelse(grepl("rh", save_table_full$label), "R", NA))
+  save_table_full$label <- sub("^rh_|lh_", "", save_table_full$label)
+  filename_all <- paste0(output_folder, "dsk_gestAge_38term_all_t1.csv")
+  write.csv(save_table_full, filename_all)
+}
+if(save_tables == TRUE){
+output_folder <-betas_folder
+filename_global <- paste0(output_folder, "ga38term_global_t1.csv")
+filename_regional <- paste0(output_folder, "ga38term_regional_t1.csv")
+write.csv(ga_reg_table_global.t1, filename_global)
+write.csv(ga_reg_table_full.t1, filename_regional)
+}
+```
+####visualization of betas on surface maps
+```{r}
+#merge with atlas data
+plot_data_dkt <- merge(ga_reg_table_full.t1_sig_MC, ggseg::dk, by = "label")
+plot_data_aseg <- merge(ga_reg_table_full.t1_sig_MC, ggseg::aseg, by = "label")
+
+#Regions not matched in atlases
+ga_reg_table_full.t1_sig_MC[!(ga_reg_table_full.t1_sig_MC$label %in% plot_data_dkt$label) & !(ga_reg_table_full.t1_sig_MC$label %in% plot_data_aseg$label),]
+
+#Setting manual limits (could match the colorbar limits between different variables)
+(t1.ga_dkt_plot <- ggplot(plot_data_dkt) +
+  geom_brain(atlas = dk, 
+             position = position_brain(hemi ~ side),
+             aes(fill = ga_beta)) +
+  scale_fill_gradient2(low = "#4878CF", mid = "white", high = "#D65F5F", limits = c(-0.23, 0.23)) +
+  theme_void()+
+  labs(title = "GA 38 week term T1"))
+
+(t1.ga_aseg_plot <- ggplot(plot_data_aseg) +
+  geom_brain(atlas = aseg,
+             aes(fill = ga_beta)) +
+  scale_fill_gradient2(low = "#4878CF", mid = "white", high = "#D65F5F", limits = c(-0.23, 0.23)) +
+  theme_void() +
+  labs(title = "GA 38 week term T1"))
+```
+###Gestational Age - 39 week sensitivity
+####linear regressions
+```{r}
+sum(!is.na(t1.full_test_df$gestAge_39term))
+ga_zscore <- z_score(t1.full_test_df$gestAge_39term)
+
+#Global phenotypes
+ga_reg_table_global.t1 <- as.data.frame(t(sapply(t1.full_test_df[, which(names(t1.full_test_df) %in% paste0(global_phenotypes, ".t1_centiles"))], function(x) {
+  x_zscore <- qnorm(x)
+  lm <- lm(x_zscore ~ ga_zscore)
+  summary <- summary(lm)
+  
+  c(ga_beta = summary$coefficients[2,1], ga_p = summary$coefficients[2,4], ga_se = summary$coefficients[2,2])
+})))
+
+ga_reg_table_global.t1$label <- name_mapping$region_name[match(sub(".t1_centiles", "", rownames(ga_reg_table_global.t1)), name_mapping$abbreviation)]
+
+ga_reg_table_global.t1_sig <- ga_reg_table_global.t1 %>% filter(ga_p < 0.05)
+ga_reg_table_global.t1$ga_p_adj <- p.adjust(ga_reg_table_global.t1$ga_p, method = "BH")
+ga_reg_table_global.t1_sig_MC <- ga_reg_table_global.t1 %>% filter(ga_p_adj < 0.05)
+
+ga_reg_table_global.t1_sig_MC
+
+#Regional phenotypes
+ga_reg_table_full.t1 <- as.data.frame(t(sapply(t1.full_test_df[, which(names(t1.full_test_df) %in% paste0(phenotypes_for_MC, ".t1_centiles"))], function(x) {
+  x_zscore <- qnorm(x)
+  lm <- lm(x_zscore ~ ga_zscore)
+  summary <- summary(lm)
+  
+  c(ga_beta = summary$coefficients[2,1], ga_p = summary$coefficients[2,4], ga_se = summary$coefficients[2,2])
+})))
+
+ga_reg_table_full.t1$label <- name_mapping$region_name[match(sub(".t1_centiles", "", rownames(ga_reg_table_full.t1)), name_mapping$abbreviation)]
+
+ga_reg_table_full.t1_sig <- ga_reg_table_full.t1 %>% filter(ga_p < 0.05)
+ga_reg_table_full.t1$ga_p_adj <- p.adjust(ga_reg_table_full.t1$ga_p, method = "BH")
+ga_reg_table_full.t1_sig_MC <- ga_reg_table_full.t1 %>% filter(ga_p_adj < 0.05)
+
+#save tables of betas
+if(save_tables == TRUE){
+  output_folder <-dkt_folder
+  save_table_full <- ga_reg_table_full.t1
+  save_table_full$hemisphere <- ifelse(grepl("lh", save_table_full$label), "L", 
+                         ifelse(grepl("rh", save_table_full$label), "R", NA))
+  save_table_full$label <- sub("^rh_|lh_", "", save_table_full$label)
+  filename_all <- paste0(output_folder, "dsk_gestAge_39term_all_t1.csv")
+  write.csv(save_table_full, filename_all)
+}
+if(save_tables == TRUE){
+output_folder <-betas_folder
+filename_global <- paste0(output_folder, "ga39term_global_t1.csv")
+filename_regional <- paste0(output_folder, "ga39term_regional_t1.csv")
+write.csv(ga_reg_table_global.t1, filename_global)
+write.csv(ga_reg_table_full.t1, filename_regional)
+}
+```
+####visualization of betas on surface maps
+```{r}
+#merge with atlas data
+plot_data_dkt <- merge(ga_reg_table_full.t1_sig_MC, ggseg::dk, by = "label")
+plot_data_aseg <- merge(ga_reg_table_full.t1_sig_MC, ggseg::aseg, by = "label")
+
+#Regions not matched in atlases
+ga_reg_table_full.t1_sig_MC[!(ga_reg_table_full.t1_sig_MC$label %in% plot_data_dkt$label) & !(ga_reg_table_full.t1_sig_MC$label %in% plot_data_aseg$label),]
+
+#Setting manual limits (could match the colorbar limits between different variables)
+(t1.ga_dkt_plot <- ggplot(plot_data_dkt) +
+  geom_brain(atlas = dk, 
+             position = position_brain(hemi ~ side),
+             aes(fill = ga_beta)) +
+  scale_fill_gradient2(low = "#4878CF", mid = "white", high = "#D65F5F", limits = c(-0.23, 0.23)) +
+  theme_void()+
+  labs(title = "GA 39 week term T1"))
+
+(t1.ga_aseg_plot <- ggplot(plot_data_aseg) +
+  geom_brain(atlas = aseg,
+             aes(fill = ga_beta)) +
+  scale_fill_gradient2(low = "#4878CF", mid = "white", high = "#D65F5F", limits = c(-0.23, 0.23)) +
+  theme_void() +
+  labs(title = "GA 39 week term T1"))
 ```
 ###birth weight
 ####linear regressions
