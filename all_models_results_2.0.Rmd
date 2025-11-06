@@ -1514,7 +1514,7 @@ if (!dir.exists(dkt_folder)) dir.create(dkt_folder)
 ####linear regressions
 ```{r}
 sum(!is.na(t1.full_test_df$gestAge))
-ga_zscore <- z_score(t1.full_test_df$gestAge)
+ga_zscore <- scale(t1.full_test_df$gestAge)
 
 #Global phenotypes
 ga_reg_table_global.t1 <- as.data.frame(t(sapply(t1.full_test_df[, which(names(t1.full_test_df) %in% paste0(global_phenotypes, ".t1_centiles"))], function(x) {
@@ -1595,7 +1595,7 @@ ga_reg_table_full.t1_sig_MC[!(ga_reg_table_full.t1_sig_MC$label %in% plot_data_d
 ####linear regressions
 ```{r}
 sum(!is.na(t1.full_test_df$gestAge_38term))
-ga_zscore <- z_score(t1.full_test_df$gestAge_38term)
+ga_zscore <- scale(t1.full_test_df$gestAge_38term)
 
 #Global phenotypes
 ga_reg_table_global.t1 <- as.data.frame(t(sapply(t1.full_test_df[, which(names(t1.full_test_df) %in% paste0(global_phenotypes, ".t1_centiles"))], function(x) {
@@ -1676,7 +1676,7 @@ ga_reg_table_full.t1_sig_MC[!(ga_reg_table_full.t1_sig_MC$label %in% plot_data_d
 ####linear regressions
 ```{r}
 sum(!is.na(t1.full_test_df$gestAge_39term))
-ga_zscore <- z_score(t1.full_test_df$gestAge_39term)
+ga_zscore <- scale(t1.full_test_df$gestAge_39term)
 
 #Global phenotypes
 ga_reg_table_global.t1 <- as.data.frame(t(sapply(t1.full_test_df[, which(names(t1.full_test_df) %in% paste0(global_phenotypes, ".t1_centiles"))], function(x) {
@@ -1758,7 +1758,7 @@ ga_reg_table_full.t1_sig_MC[!(ga_reg_table_full.t1_sig_MC$label %in% plot_data_d
 ```{r}
 sum(!is.na(t1.full_test_df$birth_weight_oz_sum_adj))
 df <- as.data.frame(t1.full_test_df[,"src_subject_id"])
-df$bw_zscore <- z_score(t1.full_test_df$birth_weight_oz_sum_adj)
+df$bw_zscore <- scale(t1.full_test_df$birth_weight_oz_sum_adj)
 
 #Global models save
 bw_global_models_list <- lapply(t1.full_test_df[, which(names(t1.full_test_df) %in% paste0(global_phenotypes, "_centiles"))], function(x) {
@@ -1833,7 +1833,7 @@ smri_vol_scs_allventricles_centiles
 smri_vol_scs_subcorticalgv_centiles
 totalWM_cb_centiles
 ```{r}
-t1.full_test_df$bw_zscore <- z_score(t1.full_test_df$birth_weight_oz_sum)
+t1.full_test_df$bw_zscore <- scale(t1.full_test_df$birth_weight_oz_sum)
 #cerebral WM-points
 t1.bw_wmv_scatterplot <-ggplot(t1.full_test_df, aes(x = birth_weight_oz_sum, y = qnorm(totalWM_cb.t1_centiles))) + geom_point(color = "#d1dff6", alpha = 0.3) + 
   geom_smooth(method = "lm", se = FALSE, color = "#92b6f0") + 
@@ -2004,7 +2004,7 @@ bwp_reg_table_full.t1_sig_MC[!(bwp_reg_table_full.t1_sig_MC$label %in% plot_data
 ####linear regressions
 ```{r}
 sum(!is.na(t1.full_test_df$bw_pgs))
-bw_pgs_zscore <- as.data.frame(sapply(t1.full_test_df[,c("bw_pgs", "PC1", "PC2", "PC3", "PC4", "PC5", "PC6", "PC7", "PC8", "PC9", "PC10")], function(x) {z_score(x)}))
+bw_pgs_zscore <- as.data.frame(sapply(t1.full_test_df[,c("bw_pgs", "PC1", "PC2", "PC3", "PC4", "PC5", "PC6", "PC7", "PC8", "PC9", "PC10")], function(x) {scale(x)}))
 
 #Global Phenotypes
 bw_pgs_reg_table_global.t1 <- as.data.frame(t(sapply(t1.full_test_df[, which(names(t1.full_test_df) %in% paste0(global_phenotypes, ".t1_centiles"))], function(x) {
@@ -2103,7 +2103,7 @@ if(dim(bw_bwpgs.t1_sig)[1] > 0 ){
 ####linear regressions
 ```{r}
 sum(!is.na(t1.full_test_df$neonatal_comp_total))
-neocomp_zscore <- z_score(t1.full_test_df$neonatal_comp_total)
+neocomp_zscore <- scale(t1.full_test_df$neonatal_comp_total)
 
 #Global Phenotypes
 neocomp_reg_table_global.t1 <- as.data.frame(t(sapply(t1.full_test_df[, which(names(t1.full_test_df) %in% paste0(global_phenotypes, ".t1_centiles"))], function(x) {
@@ -2193,7 +2193,7 @@ neocomp_reg_table_full.t1_sig_MC[!(neocomp_reg_table_full.t1_sig_MC$label %in% p
 ####linear regressions
 ```{r}
 sum(!is.na(t1.full_test_df$General_p.t1))
-gp_zscore <- z_score(t1.full_test_df$General_p.t1)
+gp_zscore <- scale(t1.full_test_df$General_p.t1)
 
 #Global Phenotypes
 gp_reg_table_global.t1 <- as.data.frame(t(sapply(t1.full_test_df[, which(names(t1.full_test_df) %in% paste0(global_phenotypes, ".t1_centiles"))], function(x) {
@@ -2339,8 +2339,8 @@ gp_reg_table_full.t1_sig_MC[!(gp_reg_table_full.t1_sig_MC$label %in% plot_data_d
 ####linear regressions
 ```{r}
 sum(!is.na(t1.full_test_df$General_p_change))
-gp_change_zscore <- z_score(t1.full_test_df$General_p_change)
-gp_change_baseline_zscore <- z_score(t1.full_test_df$General_p.t1)
+gp_change_zscore <- scale(t1.full_test_df$General_p_change)
+gp_change_baseline_zscore <- scale(t1.full_test_df$General_p.t1)
 
 #Global Phenotypes
 gp_change_reg_table_global.t1 <- as.data.frame(t(sapply(t1.full_test_df[, which(names(t1.full_test_df) %in% paste0(global_phenotypes, ".t1_centiles"))], function(x) {
@@ -2421,7 +2421,7 @@ gp_change_reg_table_full.t1_sig_MC[!(gp_change_reg_table_full.t1_sig_MC$label %i
 ####linear regressions
 ```{r}
 sum(!is.na(t1.full_test_df$gestAge) & !is.na(t1.full_test_df$bweight_percentile))
-ga_zscore <- z_score(t1.full_test_df$gestAge)
+ga_zscore <- scale(t1.full_test_df$gestAge)
 bwp_zscore <- qnorm(t1.full_test_df$bweight_percentile)
 
 #Global regression
@@ -2526,9 +2526,9 @@ bwpga_reg_table_full.t1_sig_MC[!(bwpga_reg_table_full.t1_sig_MC$label %in% plot_
 ####linear regressions
 ```{r}
 sum(!is.na(t1.full_test_df$bw_pgs) & !is.na(t1.full_test_df$birth_weight_oz_sum_adj))
-bw_pgs_zscore <- as.data.frame(sapply(t1.full_test_df[,c("bw_pgs", "PC1", "PC2", "PC3", "PC4", "PC5", "PC6", "PC7", "PC8", "PC9", "PC10")], function(x) {z_score(x)}))
+bw_pgs_zscore <- as.data.frame(sapply(t1.full_test_df[,c("bw_pgs", "PC1", "PC2", "PC3", "PC4", "PC5", "PC6", "PC7", "PC8", "PC9", "PC10")], function(x) {scale(x)}))
 #bw_pgs_zscore$bw_zscore <- qnorm(t1.full_test_df$bweight_percentile)
-bw_pgs_zscore$bw_zscore <- z_score(t1.full_test_df$birth_weight_oz_sum_adj)
+bw_pgs_zscore$bw_zscore <- scale(t1.full_test_df$birth_weight_oz_sum_adj)
 
 #Global variables
 bwbwpgs_reg_table_global.t1 <- as.data.frame(t(sapply(t1.full_test_df[, which(names(t1.full_test_df) %in% paste0(global_phenotypes, ".t1_centiles"))], function(x) {
@@ -2634,7 +2634,7 @@ bw_bwbwpgs_reg_table_full.t1_sig_MC[!(bw_bwbwpgs_reg_table_full.t1_sig_MC$label 
 ####linear regressions
 ```{r}
 sum(!is.na(t1.full_test_df$gestAge) & !is.na(t1.full_test_df$combo.income_ordered) & !is.na(t1.full_test_df$combo.prnt_edu_ordered) & !is.na(t1.full_test_df$combo.prnt_edu_ordered))
-ga_zscore <- z_score(t1.full_test_df$gestAge)
+ga_zscore <- scale(t1.full_test_df$gestAge)
 
 #Global regression
 ga_ses_reg_table_global.t1 <- as.data.frame(t(sapply(t1.full_test_df[, which(names(t1.full_test_df) %in% paste0(global_phenotypes, ".t1_centiles"))], function(x) {
@@ -2709,7 +2709,7 @@ ga_ses_reg_table_full.t1_sig_MC[!(ga_ses_reg_table_full.t1_sig_MC$label %in% plo
 ####linear regressions
 ```{r}
 sum(!is.na(t1.full_test_df$birth_weight_oz_sum_adj) & !is.na(t1.full_test_df$combo.income_ordered) & !is.na(t1.full_test_df$combo.prnt_edu_ordered))
-bw_zscore <- z_score(t1.full_test_df$birth_weight_oz_sum_adj)
+bw_zscore <- scale(t1.full_test_df$birth_weight_oz_sum_adj)
 
 #Global regression
 bw_ses_reg_table_global.t1 <- as.data.frame(t(sapply(t1.full_test_df[, which(names(t1.full_test_df) %in% paste0(global_phenotypes, ".t1_centiles"))], function(x) {
@@ -2783,7 +2783,7 @@ bw_ses_reg_table_full.t1_sig_MC[!(bw_ses_reg_table_full.t1_sig_MC$label %in% plo
 ####linear regressions
 ```{r}
 sum(!is.na(t1.full_test_df$bweight_percentile) & !is.na(t1.full_test_df$combo.income_ordered) & !is.na(t1.full_test_df$combo.prnt_edu_ordered))
-bwp_zscore <- z_score(t1.full_test_df$bweight_percentile)
+bwp_zscore <- scale(t1.full_test_df$bweight_percentile)
 
 #Global regression
 bwp_ses_reg_table_global.t1 <- as.data.frame(t(sapply(t1.full_test_df[, which(names(t1.full_test_df) %in% paste0(global_phenotypes, ".t1_centiles"))], function(x) {
@@ -2857,7 +2857,7 @@ bwp_ses_reg_table_full.t1_sig_MC[!(bwp_ses_reg_table_full.t1_sig_MC$label %in% p
 ####linear regressions
 ```{r}
 sum(!is.na(t1.full_test_df$bw_pgs) & !is.na(t1.full_test_df$combo.income_ordered) & !is.na(t1.full_test_df$combo.prnt_edu_ordered))
-bw_pgs_zscore <- as.data.frame(sapply(t1.full_test_df[,c("bw_pgs", "PC1", "PC2", "PC3", "PC4", "PC5", "PC6", "PC7", "PC8", "PC9", "PC10")], function(x) {z_score(x)}))
+bw_pgs_zscore <- as.data.frame(sapply(t1.full_test_df[,c("bw_pgs", "PC1", "PC2", "PC3", "PC4", "PC5", "PC6", "PC7", "PC8", "PC9", "PC10")], function(x) {scale(x)}))
 
 #Global Phenotypes
 bw_pgs_ses_reg_table_global.t1 <- as.data.frame(t(sapply(t1.full_test_df[, which(names(t1.full_test_df) %in% paste0(global_phenotypes, ".t1_centiles"))], function(x) {
@@ -2929,7 +2929,7 @@ bw_pgs_ses_reg_table_full.t1_sig_MC[!(bw_pgs_ses_reg_table_full.t1_sig_MC$label 
 ####linear regressions
 ```{r}
 sum(!is.na(t1.full_test_df$neonatal_comp_total) & !is.na(t1.full_test_df$combo.income_ordered) & !is.na(t1.full_test_df$combo.prnt_edu_ordered))
-neocomp_zscore <- z_score(t1.full_test_df$neonatal_comp_total)
+neocomp_zscore <- scale(t1.full_test_df$neonatal_comp_total)
 
 #Global regression
 neocomp_ses_reg_table_global.t1 <- as.data.frame(t(sapply(t1.full_test_df[, which(names(t1.full_test_df) %in% paste0(global_phenotypes, ".t1_centiles"))], function(x) {
@@ -3004,7 +3004,7 @@ neocomp_ses_reg_table_full.t1_sig_MC[!(neocomp_ses_reg_table_full.t1_sig_MC$labe
 ####linear regressions
 ```{r}
 sum(!is.na(t1.full_test_df$General_p.t1) & !is.na(t1.full_test_df$combo.income_ordered) & !is.na(t1.full_test_df$combo.prnt_edu_ordered))
-gp_zscore <- z_score(t1.full_test_df$General_p.t1)
+gp_zscore <- scale(t1.full_test_df$General_p.t1)
 
 #Global regression
 gp_ses_reg_table_global.t1 <- as.data.frame(t(sapply(t1.full_test_df[, which(names(t1.full_test_df) %in% paste0(global_phenotypes, ".t1_centiles"))], function(x) {
@@ -3079,9 +3079,9 @@ gp_ses_reg_table_full.t1_sig_MC[!(gp_ses_reg_table_full.t1_sig_MC$label %in% plo
 sum(!is.na(t1.full_test_df$gestAge) & !is.na(t1.full_test_df$anthroweightcalc) & !is.na(t1.full_test_df$anthroheightcalc))
 
 df <- as.data.frame(t1.full_test_df[,"src_subject_id"])
-#df$weight_zscore <- z_score(t1.full_test_df$anthroweightcalc)
-df$height_zscore <- z_score(t1.full_test_df$anthroheightcalc)
-df$ga_zscore <- z_score(t1.full_test_df$gestAge)
+#df$weight_zscore <- scale(t1.full_test_df$anthroweightcalc)
+df$height_zscore <- scale(t1.full_test_df$anthroheightcalc)
+df$ga_zscore <- scale(t1.full_test_df$gestAge)
 
 #Global phenotypes
 ga_wh_reg_table_global.t1 <- as.data.frame(t(sapply(t1.full_test_df[, which(names(t1.full_test_df) %in% paste0(global_phenotypes, ".t1_centiles"))], function(x) {
@@ -3158,11 +3158,11 @@ ga_wh_reg_table_full.t1_sig_MC[!(ga_wh_reg_table_full.t1_sig_MC$label %in% plot_
 sum(!is.na(t1.full_test_df$birth_weight_oz_sum_adj) & !is.na(t1.full_test_df$anthroweightcalc) & !is.na(t1.full_test_df$anthroheightcalc))
 
 df <- as.data.frame(t1.full_test_df[,"src_subject_id"])
-#df$weight_zscore <- z_score(t1.full_test_df$anthroweightcalc)
-#df$height_zscore <- z_score(t1.full_test_df$anthroheightcalc)
+#df$weight_zscore <- scale(t1.full_test_df$anthroweightcalc)
+#df$height_zscore <- scale(t1.full_test_df$anthroheightcalc)
 df$weight_zscore <- t1.full_test_df$wfaz
 df$height_zscore <- t1.full_test_df$hfaz
-df$bw_zscore <- z_score(t1.full_test_df$birth_weight_oz_sum_adj)
+df$bw_zscore <- scale(t1.full_test_df$birth_weight_oz_sum_adj)
 
 #Global phenotypes
 bw_wh_reg_table_global.t1 <- as.data.frame(t(sapply(t1.full_test_df[, which(names(t1.full_test_df) %in% paste0(global_phenotypes, ".t1_centiles"))], function(x) {
@@ -3237,8 +3237,8 @@ bw_wh_reg_table_full.t1_sig_MC[!(bw_wh_reg_table_full.t1_sig_MC$label %in% plot_
 sum(!is.na(t1.full_test_df$bweight_percentile) & !is.na(t1.full_test_df$anthroweightcalc) & !is.na(t1.full_test_df$anthroheightcalc))
 
 df <- as.data.frame(t1.full_test_df[,"src_subject_id"])
-df$weight_zscore <- z_score(t1.full_test_df$anthroweightcalc)
-df$height_zscore <- z_score(t1.full_test_df$anthroheightcalc)
+df$weight_zscore <- scale(t1.full_test_df$anthroweightcalc)
+df$height_zscore <- scale(t1.full_test_df$anthroheightcalc)
 df$bw_zscore <- qnorm(t1.full_test_df$bweight_percentile)
 
 #Global phenotypes
@@ -3313,7 +3313,7 @@ bwp_wh_reg_table_full.t1_sig_MC[!(bwp_wh_reg_table_full.t1_sig_MC$label %in% plo
 ####linear regressions
 ```{r}
 sum(!is.na(t1.full_test_df$bw_pgs) & !is.na(t1.full_test_df$anthroweightcalc) & !is.na(t1.full_test_df$anthroheightcalc))
-bw_pgs_zscore <- as.data.frame(sapply(t1.full_test_df[,c("bw_pgs", "PC1", "PC2", "PC3", "PC4", "PC5", "PC6", "PC7", "PC8", "PC9", "PC10")], function(x) {z_score(x)}))
+bw_pgs_zscore <- as.data.frame(sapply(t1.full_test_df[,c("bw_pgs", "PC1", "PC2", "PC3", "PC4", "PC5", "PC6", "PC7", "PC8", "PC9", "PC10")], function(x) {scale(x)}))
 
 #Global Phenotypes
 bw_pgs_wh_reg_table_global.t1 <- as.data.frame(t(sapply(t1.full_test_df[, which(names(t1.full_test_df) %in% paste0(global_phenotypes, ".t1_centiles"))], function(x) {
@@ -3387,9 +3387,9 @@ bw_pgs_wh_reg_table_full.t1_sig_MC[!(bw_pgs_wh_reg_table_full.t1_sig_MC$label %i
 sum(!is.na(t1.full_test_df$neonatal_comp_total) & !is.na(t1.full_test_df$anthroweightcalc) & !is.na(t1.full_test_df$anthroheightcalc))
 
 df <- as.data.frame(t1.full_test_df[,"src_subject_id"])
-df$weight_zscore <- z_score(t1.full_test_df$anthroweightcalc)
-df$height_zscore <- z_score(t1.full_test_df$anthroheightcalc)
-df$neocomp_zscore <- z_score(t1.full_test_df$neonatal_comp_total)
+df$weight_zscore <- scale(t1.full_test_df$anthroweightcalc)
+df$height_zscore <- scale(t1.full_test_df$anthroheightcalc)
+df$neocomp_zscore <- scale(t1.full_test_df$neonatal_comp_total)
 
 #Global phenotypes
 neocomp_wh_reg_table_global.t1 <- as.data.frame(t(sapply(t1.full_test_df[, which(names(t1.full_test_df) %in% paste0(global_phenotypes, ".t1_centiles"))], function(x) {
@@ -3465,9 +3465,9 @@ neocomp_wh_reg_table_full.t1_sig_MC[!(neocomp_wh_reg_table_full.t1_sig_MC$label 
 sum(!is.na(t1.full_test_df$General_p.t1) & !is.na(t1.full_test_df$anthroweightcalc) & !is.na(t1.full_test_df$anthroheightcalc))
 
 df <- as.data.frame(t1.full_test_df[,"src_subject_id"])
-df$weight_zscore <- z_score(t1.full_test_df$anthroweightcalc)
-df$height_zscore <- z_score(t1.full_test_df$anthroheightcalc)
-df$gp_zscore <- z_score(t1.full_test_df$General_p.t1)
+df$weight_zscore <- scale(t1.full_test_df$anthroweightcalc)
+df$height_zscore <- scale(t1.full_test_df$anthroheightcalc)
+df$gp_zscore <- scale(t1.full_test_df$General_p.t1)
 
 #Global phenotypes
 gp_wh_reg_table_global.t1 <- as.data.frame(t(sapply(t1.full_test_df[, which(names(t1.full_test_df) %in% paste0(global_phenotypes, ".t1_centiles"))], function(x) {
@@ -3541,7 +3541,7 @@ gp_wh_reg_table_full.t1_sig_MC[!(gp_wh_reg_table_full.t1_sig_MC$label %in% plot_
 ###Gestational Age
 ####linear regressions
 ```{r}
-ga_zscore <- z_score(t1.full_test_df$gestAge)
+ga_zscore <- scale(t1.full_test_df$gestAge)
 total_volume_zcore <- qnorm(t1.full_test_df$smri_vol_scs_wholeb.t1_centiles)
 
 #Global phenotypes
@@ -3685,7 +3685,7 @@ tbv_ga_reg_table_full.t1_sig_MC[!(tbv_ga_reg_table_full.t1_sig_MC$label %in% plo
 ####linear regressions
 ```{r}
 df <- as.data.frame(t1.full_test_df[,"src_subject_id"])
-df$bw_zscore <- z_score(t1.full_test_df$birth_weight_oz_sum_adj)
+df$bw_zscore <- scale(t1.full_test_df$birth_weight_oz_sum_adj)
 df$total_volume_zcore <- qnorm(t1.full_test_df$smri_vol_scs_wholeb.t1_centiles)
 
 #Global phenotypes -- save betas and p-values
@@ -3979,7 +3979,7 @@ tbv_bwp_reg_table_full.t1_sig_MC[!(tbv_bwp_reg_table_full.t1_sig_MC$label %in% p
 ###PRS-bw
 ####linear regressions
 ```{r}
-bw_pgs_zscore <- as.data.frame(sapply(t1.full_test_df[,c("bw_pgs", "PC1", "PC2", "PC3", "PC4", "PC5", "PC6", "PC7", "PC8", "PC9", "PC10")], function(x) {z_score(x)}))
+bw_pgs_zscore <- as.data.frame(sapply(t1.full_test_df[,c("bw_pgs", "PC1", "PC2", "PC3", "PC4", "PC5", "PC6", "PC7", "PC8", "PC9", "PC10")], function(x) {scale(x)}))
 total_volume_zscore <- qnorm(t1.full_test_df$smri_vol_scs_wholeb.t1_centiles)
 
 #Global Phenotypes
@@ -4121,7 +4121,7 @@ tbv_bw_pgs_reg_table_full.t1_sig_MC[!(tbv_bw_pgs_reg_table_full.t1_sig_MC$label 
 ###Neonatal Comp
 ####linear regressions
 ```{r}
-neocomp_zscore <- z_score(t1.full_test_df$neonatal_comp_total)
+neocomp_zscore <- scale(t1.full_test_df$neonatal_comp_total)
 total_volume_zscore <- qnorm(t1.full_test_df$smri_vol_scs_wholeb.t1_centiles)
 
 #Global Phenotypes
@@ -4253,7 +4253,7 @@ tbv_neocomp_reg_table_full.t1_sig_MC[!(tbv_neocomp_reg_table_full.t1_sig_MC$labe
 ###general P-factor
 ####linear regressions
 ```{r}
-gp_zscore <- z_score(t1.full_test_df$General_p.t1)
+gp_zscore <- scale(t1.full_test_df$General_p.t1)
 total_volume_zscore <- qnorm(t1.full_test_df$smri_vol_scs_wholeb.t1_centiles)
 
 #Global Phenotypes
@@ -4398,7 +4398,7 @@ tbv_gp_reg_table_full.t1_sig_MC[!(tbv_gp_reg_table_full.t1_sig_MC$label %in% plo
 ####linear regressions
 ```{r}
 sum(!is.na(t2.full_test_df$gestAge))
-ga_zscore <- z_score(t2.full_test_df$gestAge)
+ga_zscore <- scale(t2.full_test_df$gestAge)
 
 #Global phenotypes
 ga_reg_table_global.t2 <- as.data.frame(t(sapply(t2.full_test_df[, which(names(t2.full_test_df) %in% paste0(global_phenotypes, ".t2_centiles"))], function(x) {
@@ -4480,7 +4480,7 @@ ga_reg_table_full.t2_sig_MC[!(ga_reg_table_full.t2_sig_MC$label %in% plot_data_d
 ####linear regressions
 ```{r}
 sum(!is.na(t2.full_test_df$gestAge_38term))
-ga_zscore <- z_score(t2.full_test_df$gestAge_38term)
+ga_zscore <- scale(t2.full_test_df$gestAge_38term)
 
 #Global phenotypes
 ga_reg_table_global.t2 <- as.data.frame(t(sapply(t2.full_test_df[, which(names(t2.full_test_df) %in% paste0(global_phenotypes, ".t2_centiles"))], function(x) {
@@ -4561,7 +4561,7 @@ ga_reg_table_full.t2_sig_MC[!(ga_reg_table_full.t2_sig_MC$label %in% plot_data_d
 ####linear regressions
 ```{r}
 sum(!is.na(t2.full_test_df$gestAge_39term))
-ga_zscore <- z_score(t2.full_test_df$gestAge_39term)
+ga_zscore <- scale(t2.full_test_df$gestAge_39term)
 
 #Global phenotypes
 ga_reg_table_global.t2 <- as.data.frame(t(sapply(t2.full_test_df[, which(names(t2.full_test_df) %in% paste0(global_phenotypes, ".t2_centiles"))], function(x) {
@@ -4643,7 +4643,7 @@ ga_reg_table_full.t2_sig_MC[!(ga_reg_table_full.t2_sig_MC$label %in% plot_data_d
 ```{r}
 sum(!is.na(t2.full_test_df$birth_weight_oz_sum_adj))
 df <- as.data.frame(t2.full_test_df[,"src_subject_id"])
-df$bw_zscore <- z_score(t2.full_test_df$birth_weight_oz_sum_adj)
+df$bw_zscore <- scale(t2.full_test_df$birth_weight_oz_sum_adj)
 
 #Global models save
 bw_global_models_list <- lapply(t2.full_test_df[, which(names(t2.full_test_df) %in% paste0(global_phenotypes, "_centiles"))], function(x) {
@@ -4715,7 +4715,7 @@ smri_vol_scs_allventricles_centiles
 smri_vol_scs_subcorticalgv_centiles
 totalWM_cb_centiles
 ```{r}
-t2.full_test_df$bw_zscore <- z_score(t2.full_test_df$birth_weight_oz_sum)
+t2.full_test_df$bw_zscore <- scale(t2.full_test_df$birth_weight_oz_sum)
 #cerebral WM-points
 t2.bw_wmv_scatterplot <-ggplot(t2.full_test_df, aes(x = birth_weight_oz_sum, y = qnorm(totalWM_cb_centiles))) + geom_point(color = "#d1dff6", alpha = 0.3) + 
   geom_smooth(method = "lm", se = FALSE, color = "#92b6f0") + 
@@ -4942,7 +4942,7 @@ bwp_reg_table_full.t2_sig_MC[!(bwp_reg_table_full.t2_sig_MC$label %in% plot_data
 ####linear regressions
 ```{r}
 sum(!is.na(t2.full_test_df$bw_pgs))
-bw_pgs_zscore <- as.data.frame(sapply(t2.full_test_df[,c("bw_pgs", "PC1", "PC2", "PC3", "PC4", "PC5", "PC6", "PC7", "PC8", "PC9", "PC10")], function(x) {z_score(x)}))
+bw_pgs_zscore <- as.data.frame(sapply(t2.full_test_df[,c("bw_pgs", "PC1", "PC2", "PC3", "PC4", "PC5", "PC6", "PC7", "PC8", "PC9", "PC10")], function(x) {scale(x)}))
 
 #Global Phenotypes
 bw_pgs_reg_table_global.t2 <- as.data.frame(t(sapply(t2.full_test_df[, which(names(t2.full_test_df) %in% paste0(global_phenotypes, ".t2_centiles"))], function(x) {
@@ -5038,7 +5038,7 @@ if(dim(bw_bwpgs.t12_sig)[1] > 0 ){
 ####linear regressions
 ```{r}
 sum(!is.na(t2.full_test_df$neonatal_comp_total))
-neocomp_zscore <- z_score(t2.full_test_df$neonatal_comp_total)
+neocomp_zscore <- scale(t2.full_test_df$neonatal_comp_total)
 
 #Global Phenotypes
 neocomp_reg_table_global.t2 <- as.data.frame(t(sapply(t2.full_test_df[, which(names(t2.full_test_df) %in% paste0(global_phenotypes, ".t2_centiles"))], function(x) {
@@ -5113,7 +5113,7 @@ neocomp_reg_table_full.t2_sig_MC[!(neocomp_reg_table_full.t2_sig_MC$label %in% p
 ####linear regressions
 ```{r}
 sum(!is.na(t2.full_test_df$General_p.t2))
-gp_zscore <- z_score(t2.full_test_df$General_p.t2)
+gp_zscore <- scale(t2.full_test_df$General_p.t2)
 
 #Global Phenotypes
 gp_reg_table_global.t2 <- as.data.frame(t(sapply(t2.full_test_df[, which(names(t2.full_test_df) %in% paste0(global_phenotypes, ".t2_centiles"))], function(x) {
@@ -5198,8 +5198,8 @@ gp_reg_table_full.t2_sig_MC[!(gp_reg_table_full.t2_sig_MC$label %in% plot_data_d
 ####linear regressions
 ```{r}
 sum(!is.na(t2.full_test_df$General_p_change))
-gp_change_zscore <- z_score(t2.full_test_df$General_p_change)
-gp_change_baseline_zscore <- z_score(t2.full_test_df$General_p.t1)
+gp_change_zscore <- scale(t2.full_test_df$General_p_change)
+gp_change_baseline_zscore <- scale(t2.full_test_df$General_p.t1)
 
 #Global Phenotypes
 gp_change_reg_table_global.t2 <- as.data.frame(t(sapply(t2.full_test_df[, which(names(t2.full_test_df) %in% paste0(global_phenotypes, ".t2_centiles"))], function(x) {
@@ -5280,7 +5280,7 @@ gp_change_reg_table_full.t2_sig_MC[!(gp_change_reg_table_full.t2_sig_MC$label %i
 ####linear regressions
 ```{r}
 sum(!is.na(t2.full_test_df$gestAge) & !is.na(t2.full_test_df$bweight_percentile))
-ga_zscore <- z_score(t2.full_test_df$gestAge)
+ga_zscore <- scale(t2.full_test_df$gestAge)
 bwp_zscore <- qnorm(t2.full_test_df$bweight_percentile)
 
 #Global regression
@@ -5390,9 +5390,9 @@ bwpga_reg_table_full.t2_sig_MC[!(bwpga_reg_table_full.t2_sig_MC$label %in% plot_
 ####linear regressions
 ```{r}
 sum(!is.na(t2.full_test_df$bw_pgs) & !is.na(t2.full_test_df$birth_weight_oz_sum_adj))
-bw_pgs_zscore <- as.data.frame(sapply(t2.full_test_df[,c("bw_pgs", "PC1", "PC2", "PC3", "PC4", "PC5", "PC6", "PC7", "PC8", "PC9", "PC10")], function(x) {z_score(x)}))
+bw_pgs_zscore <- as.data.frame(sapply(t2.full_test_df[,c("bw_pgs", "PC1", "PC2", "PC3", "PC4", "PC5", "PC6", "PC7", "PC8", "PC9", "PC10")], function(x) {scale(x)}))
 #bw_pgs_zscore$bw_zscore <- qnorm(t2.full_test_df$bweight_percentile)
-bw_pgs_zscore$bw_zscore <- z_score(t2.full_test_df$birth_weight_oz_sum_adj)
+bw_pgs_zscore$bw_zscore <- scale(t2.full_test_df$birth_weight_oz_sum_adj)
 
 #Global variables
 bwbwpgs_reg_table_global.t2 <- as.data.frame(t(sapply(t2.full_test_df[, which(names(t2.full_test_df) %in% paste0(global_phenotypes, ".t2_centiles"))], function(x) {
@@ -5501,7 +5501,7 @@ bw_bwbwpgs_reg_table_full.t2_sig_MC[!(bw_bwbwpgs_reg_table_full.t2_sig_MC$label 
 ####linear regressions
 ```{r}
 sum(!is.na(t2.full_test_df$gestAge) & !is.na(t2.full_test_df$combo.income_ordered) & !is.na(t2.full_test_df$combo.prnt_edu_ordered) & !is.na(t2.full_test_df$combo.prnt_edu_ordered))
-ga_zscore <- z_score(t2.full_test_df$gestAge)
+ga_zscore <- scale(t2.full_test_df$gestAge)
 
 #Global regression
 ga_ses_reg_table_global.t2 <- as.data.frame(t(sapply(t2.full_test_df[, which(names(t2.full_test_df) %in% paste0(global_phenotypes, ".t2_centiles"))], function(x) {
@@ -5576,7 +5576,7 @@ ga_ses_reg_table_full.t2_sig_MC[!(ga_ses_reg_table_full.t2_sig_MC$label %in% plo
 ####linear regressions
 ```{r}
 sum(!is.na(t2.full_test_df$birth_weight_oz_sum_adj) & !is.na(t2.full_test_df$combo.income_ordered) & !is.na(t2.full_test_df$combo.prnt_edu_ordered))
-bw_zscore <- z_score(t2.full_test_df$birth_weight_oz_sum_adj)
+bw_zscore <- scale(t2.full_test_df$birth_weight_oz_sum_adj)
 
 #Global regression
 bw_ses_reg_table_global.t2 <- as.data.frame(t(sapply(t2.full_test_df[, which(names(t2.full_test_df) %in% paste0(global_phenotypes, ".t2_centiles"))], function(x) {
@@ -5650,7 +5650,7 @@ bw_ses_reg_table_full.t2_sig_MC[!(bw_ses_reg_table_full.t2_sig_MC$label %in% plo
 ####linear regressions
 ```{r}
 sum(!is.na(t2.full_test_df$bweight_percentile) & !is.na(t2.full_test_df$combo.income_ordered) & !is.na(t2.full_test_df$combo.prnt_edu_ordered))
-bwp_zscore <- z_score(t2.full_test_df$bweight_percentile)
+bwp_zscore <- scale(t2.full_test_df$bweight_percentile)
 
 #Global regression
 bwp_ses_reg_table_global.t2 <- as.data.frame(t(sapply(t2.full_test_df[, which(names(t2.full_test_df) %in% paste0(global_phenotypes, ".t2_centiles"))], function(x) {
@@ -5724,7 +5724,7 @@ bwp_ses_reg_table_full.t2_sig_MC[!(bwp_ses_reg_table_full.t2_sig_MC$label %in% p
 ####linear regressions
 ```{r}
 sum(!is.na(t2.full_test_df$bw_pgs) & !is.na(t2.full_test_df$combo.income_ordered) & !is.na(t2.full_test_df$combo.prnt_edu_ordered))
-bw_pgs_zscore <- as.data.frame(sapply(t2.full_test_df[,c("bw_pgs", "PC1", "PC2", "PC3", "PC4", "PC5", "PC6", "PC7", "PC8", "PC9", "PC10")], function(x) {z_score(x)}))
+bw_pgs_zscore <- as.data.frame(sapply(t2.full_test_df[,c("bw_pgs", "PC1", "PC2", "PC3", "PC4", "PC5", "PC6", "PC7", "PC8", "PC9", "PC10")], function(x) {scale(x)}))
 
 #Global Phenotypes
 bw_pgs_ses_reg_table_global.t2 <- as.data.frame(t(sapply(t2.full_test_df[, which(names(t2.full_test_df) %in% paste0(global_phenotypes, ".t2_centiles"))], function(x) {
@@ -5795,7 +5795,7 @@ bw_pgs_ses_reg_table_full.t2_sig_MC[!(bw_pgs_ses_reg_table_full.t2_sig_MC$label 
 ####linear regressions
 ```{r}
 sum(!is.na(t2.full_test_df$neonatal_comp_total) & !is.na(t2.full_test_df$combo.income_ordered) & !is.na(t2.full_test_df$combo.prnt_edu_ordered))
-neocomp_zscore <- z_score(t2.full_test_df$neonatal_comp_total)
+neocomp_zscore <- scale(t2.full_test_df$neonatal_comp_total)
 
 #Global regression
 neocomp_ses_reg_table_global.t2 <- as.data.frame(t(sapply(t2.full_test_df[, which(names(t2.full_test_df) %in% paste0(global_phenotypes, ".t2_centiles"))], function(x) {
@@ -5870,7 +5870,7 @@ neocomp_ses_reg_table_full.t2_sig_MC[!(neocomp_ses_reg_table_full.t2_sig_MC$labe
 ####linear regressions
 ```{r}
 sum(!is.na(t2.full_test_df$General_p.t2) & !is.na(t2.full_test_df$combo.income_ordered) & !is.na(t2.full_test_df$combo.prnt_edu_ordered))
-gp_zscore <- z_score(t2.full_test_df$General_p.t2)
+gp_zscore <- scale(t2.full_test_df$General_p.t2)
 
 #Global regression
 gp_ses_reg_table_global.t2 <- as.data.frame(t(sapply(t2.full_test_df[, which(names(t2.full_test_df) %in% paste0(global_phenotypes, ".t2_centiles"))], function(x) {
@@ -5946,9 +5946,9 @@ gp_ses_reg_table_full.t2_sig_MC[!(gp_ses_reg_table_full.t2_sig_MC$label %in% plo
 sum(!is.na(t2.full_test_df$gestAge) & !is.na(t2.full_test_df$anthroweightcalc) & !is.na(t2.full_test_df$anthroheightcalc))
 
 df <- as.data.frame(t2.full_test_df[,"src_subject_id"])
-df$weight_zscore <- z_score(t2.full_test_df$anthroweightcalc)
-df$height_zscore <- z_score(t2.full_test_df$anthroheightcalc)
-df$ga_zscore <- z_score(t2.full_test_df$gestAge)
+df$weight_zscore <- scale(t2.full_test_df$anthroweightcalc)
+df$height_zscore <- scale(t2.full_test_df$anthroheightcalc)
+df$ga_zscore <- scale(t2.full_test_df$gestAge)
 
 #Global phenotypes
 ga_wh_reg_table_global.t2 <- as.data.frame(t(sapply(t2.full_test_df[, which(names(t2.full_test_df) %in% paste0(global_phenotypes, ".t2_centiles"))], function(x) {
@@ -6023,9 +6023,9 @@ ga_wh_reg_table_full.t2_sig_MC[!(ga_wh_reg_table_full.t2_sig_MC$label %in% plot_
 sum(!is.na(t2.full_test_df$birth_weight_oz_sum_adj) & !is.na(t2.full_test_df$anthroweightcalc) & !is.na(t2.full_test_df$anthroheightcalc))
 
 df <- as.data.frame(t2.full_test_df[,"src_subject_id"])
-df$weight_zscore <- z_score(t2.full_test_df$anthroweightcalc)
-df$height_zscore <- z_score(t2.full_test_df$anthroheightcalc)
-df$bw_zscore <- z_score(t2.full_test_df$birth_weight_oz_sum_adj)
+df$weight_zscore <- scale(t2.full_test_df$anthroweightcalc)
+df$height_zscore <- scale(t2.full_test_df$anthroheightcalc)
+df$bw_zscore <- scale(t2.full_test_df$birth_weight_oz_sum_adj)
 
 #Global phenotypes
 bw_wh_reg_table_global.t2 <- as.data.frame(t(sapply(t2.full_test_df[, which(names(t2.full_test_df) %in% paste0(global_phenotypes, ".t2_centiles"))], function(x) {
@@ -6100,9 +6100,9 @@ bw_wh_reg_table_full.t2_sig_MC[!(bw_wh_reg_table_full.t2_sig_MC$label %in% plot_
 sum(!is.na(t2.full_test_df$bweight_percentile) & !is.na(t2.full_test_df$anthroweightcalc) & !is.na(t2.full_test_df$anthroheightcalc))
 
 df <- as.data.frame(t2.full_test_df[,"src_subject_id"])
-df$weight_zscore <- z_score(t2.full_test_df$anthroweightcalc)
-df$height_zscore <- z_score(t2.full_test_df$anthroheightcalc)
-df$bw_zscore <- z_score(t2.full_test_df$birth_weight_oz_sum_adj)
+df$weight_zscore <- scale(t2.full_test_df$anthroweightcalc)
+df$height_zscore <- scale(t2.full_test_df$anthroheightcalc)
+df$bw_zscore <- scale(t2.full_test_df$birth_weight_oz_sum_adj)
 
 #Global phenotypes
 bwp_wh_reg_table_global.t2 <- as.data.frame(t(sapply(t2.full_test_df[, which(names(t2.full_test_df) %in% paste0(global_phenotypes, ".t2_centiles"))], function(x) {
@@ -6175,7 +6175,7 @@ bwp_wh_reg_table_full.t2_sig_MC[!(bwp_wh_reg_table_full.t2_sig_MC$label %in% plo
 ####linear regressions
 ```{r}
 sum(!is.na(t2.full_test_df$bw_pgs) & !is.na(t2.full_test_df$anthroweightcalc) & !is.na(t2.full_test_df$anthroheightcalc))
-bw_pgs_zscore <- as.data.frame(sapply(t2.full_test_df[,c("bw_pgs", "PC1", "PC2", "PC3", "PC4", "PC5", "PC6", "PC7", "PC8", "PC9", "PC10")], function(x) {z_score(x)}))
+bw_pgs_zscore <- as.data.frame(sapply(t2.full_test_df[,c("bw_pgs", "PC1", "PC2", "PC3", "PC4", "PC5", "PC6", "PC7", "PC8", "PC9", "PC10")], function(x) {scale(x)}))
 
 #Global Phenotypes
 bw_pgs_wh_reg_table_global.t2 <- as.data.frame(t(sapply(t2.full_test_df[, which(names(t2.full_test_df) %in% paste0(global_phenotypes, ".t2_centiles"))], function(x) {
@@ -6249,9 +6249,9 @@ bw_pgs_wh_reg_table_full.t2_sig_MC[!(bw_pgs_wh_reg_table_full.t2_sig_MC$label %i
 sum(!is.na(t2.full_test_df$neonatal_comp_total) & !is.na(t2.full_test_df$anthroweightcalc) & !is.na(t2.full_test_df$anthroheightcalc))
 
 df <- as.data.frame(t2.full_test_df[,"src_subject_id"])
-df$weight_zscore <- z_score(t2.full_test_df$anthroweightcalc)
-df$height_zscore <- z_score(t2.full_test_df$anthroheightcalc)
-df$neocomp_zscore <- z_score(t2.full_test_df$neonatal_comp_total)
+df$weight_zscore <- scale(t2.full_test_df$anthroweightcalc)
+df$height_zscore <- scale(t2.full_test_df$anthroheightcalc)
+df$neocomp_zscore <- scale(t2.full_test_df$neonatal_comp_total)
 
 #Global phenotypes
 neocomp_wh_reg_table_global.t2 <- as.data.frame(t(sapply(t2.full_test_df[, which(names(t2.full_test_df) %in% paste0(global_phenotypes, ".t2_centiles"))], function(x) {
@@ -6327,9 +6327,9 @@ neocomp_wh_reg_table_full.t2_sig_MC[!(neocomp_wh_reg_table_full.t2_sig_MC$label 
 sum(!is.na(t2.full_test_df$General_p.t2) & !is.na(t2.full_test_df$anthroweightcalc) & !is.na(t2.full_test_df$anthroheightcalc))
 
 df <- as.data.frame(t2.full_test_df[,"src_subject_id"])
-df$weight_zscore <- z_score(t2.full_test_df$anthroweightcalc)
-df$height_zscore <- z_score(t2.full_test_df$anthroheightcalc)
-df$gp_zscore <- z_score(t2.full_test_df$General_p.t2)
+df$weight_zscore <- scale(t2.full_test_df$anthroweightcalc)
+df$height_zscore <- scale(t2.full_test_df$anthroheightcalc)
+df$gp_zscore <- scale(t2.full_test_df$General_p.t2)
 
 #Global phenotypes
 gp_wh_reg_table_global.t2 <- as.data.frame(t(sapply(t2.full_test_df[, which(names(t2.full_test_df) %in% paste0(global_phenotypes, ".t2_centiles"))], function(x) {
@@ -6403,7 +6403,7 @@ gp_wh_reg_table_full.t2_sig_MC[!(gp_wh_reg_table_full.t2_sig_MC$label %in% plot_
 ###Gestational Age
 ####linear regressions
 ```{r}
-ga_zscore <- z_score(t2.full_test_df$gestAge)
+ga_zscore <- scale(t2.full_test_df$gestAge)
 total_volume_zcore <- qnorm(t2.full_test_df$smri_vol_scs_wholeb.t2_centiles)
 
 #Global phenotypes
@@ -6546,7 +6546,7 @@ tbv_ga_reg_table_full.t2_sig_MC[!(tbv_ga_reg_table_full.t2_sig_MC$label %in% plo
 ####linear regressions
 ```{r}
 df <- as.data.frame(t2.full_test_df[,"src_subject_id"])
-df$bw_zscore <- z_score(t2.full_test_df$birth_weight_oz_sum_adj)
+df$bw_zscore <- scale(t2.full_test_df$birth_weight_oz_sum_adj)
 df$total_volume_zcore <- qnorm(t2.full_test_df$smri_vol_scs_wholeb.t2_centiles)
 
 #Global phenotypes -- save betas and p-values
@@ -6834,7 +6834,7 @@ tbv_bwp_reg_table_full.t2_sig_MC[!(tbv_bwp_reg_table_full.t2_sig_MC$label %in% p
 ###PRS-bw
 ####linear regressions
 ```{r}
-bw_pgs_zscore <- as.data.frame(sapply(t2.full_test_df[,c("bw_pgs", "PC1", "PC2", "PC3", "PC4", "PC5", "PC6", "PC7", "PC8", "PC9", "PC10")], function(x) {z_score(x)}))
+bw_pgs_zscore <- as.data.frame(sapply(t2.full_test_df[,c("bw_pgs", "PC1", "PC2", "PC3", "PC4", "PC5", "PC6", "PC7", "PC8", "PC9", "PC10")], function(x) {scale(x)}))
 total_volume_zscore <- qnorm(t2.full_test_df$smri_vol_scs_wholeb.t2_centiles)
 
 #Global Phenotypes
@@ -6981,7 +6981,7 @@ tbv_bw_pgs_reg_table_full.t2_sig_MC[!(tbv_bw_pgs_reg_table_full.t2_sig_MC$label 
 ###Neonatal Comp
 ####linear regressions
 ```{r}
-neocomp_zscore <- z_score(t2.full_test_df$neonatal_comp_total)
+neocomp_zscore <- scale(t2.full_test_df$neonatal_comp_total)
 total_volume_zscore <- qnorm(t2.full_test_df$smri_vol_scs_wholeb.t2_centiles)
 
 #Global Phenotypes
@@ -7113,7 +7113,7 @@ tbv_neocomp_reg_table_full.t2_sig_MC[!(tbv_neocomp_reg_table_full.t2_sig_MC$labe
 ###general P-factor
 ####linear regressions
 ```{r}
-gp_zscore <- z_score(t2.full_test_df$General_p.t2)
+gp_zscore <- scale(t2.full_test_df$General_p.t2)
 total_volume_zscore <- qnorm(t2.full_test_df$smri_vol_scs_wholeb.t2_centiles)
 
 #Global Phenotypes
@@ -7262,7 +7262,7 @@ tbv_gp_reg_table_full.t2_sig_MC[!(tbv_gp_reg_table_full.t2_sig_MC$label %in% plo
 ####linear regressions
 ```{r}
 sum(!is.na(long.full_test_df$gestAge))
-ga_zscore <- z_score(long.full_test_df$gestAge)
+ga_zscore <- scale(long.full_test_df$gestAge)
 
 #Global phenotypes
 ga_reg_table_global.long <- as.data.frame(t(sapply(long.full_test_df[, which(names(long.full_test_df) %in% paste0(global_phenotypes, ".long_centiles"))], function(x) {
@@ -7345,7 +7345,7 @@ ga_reg_table_full.long_sig_MC[!(ga_reg_table_full.long_sig_MC$label %in% plot_da
 ```{r}
 sum(!is.na(long.full_test_df$birth_weight_oz_sum_adj))
 df <- as.data.frame(long.full_test_df[,"src_subject_id"])
-df$bw_zscore <- z_score(long.full_test_df$birth_weight_oz_sum_adj)
+df$bw_zscore <- scale(long.full_test_df$birth_weight_oz_sum_adj)
 
 #Global models save
 bw_global_models_list <- lapply(long.full_test_df[, which(names(long.full_test_df) %in% paste0(global_phenotypes, "_centiles"))], function(x) {
@@ -7524,7 +7524,7 @@ bwp_reg_table_full.long_sig_MC[!(bwp_reg_table_full.long_sig_MC$label %in% plot_
 ```{r}
 
 sum(!is.na(long.full_test_df$bw_pgs))
-bw_pgs_zscore <- as.data.frame(sapply(long.full_test_df[,c("bw_pgs", "PC1", "PC2", "PC3", "PC4", "PC5", "PC6", "PC7", "PC8", "PC9", "PC10")], function(x) {z_score(x)}))
+bw_pgs_zscore <- as.data.frame(sapply(long.full_test_df[,c("bw_pgs", "PC1", "PC2", "PC3", "PC4", "PC5", "PC6", "PC7", "PC8", "PC9", "PC10")], function(x) {scale(x)}))
 
 #Global Phenotypes
 bw_pgs_reg_table_global.long <- as.data.frame(t(sapply(long.full_test_df[, which(names(long.full_test_df) %in% paste0(global_phenotypes, ".long_centiles"))], function(x) {
@@ -7663,7 +7663,7 @@ if(dim(bw_bwpgs.long_sig)[1] > 0){
 ####linear regressions
 ```{r}
 sum(!is.na(long.full_test_df$neonatal_comp_total))
-neocomp_zscore <- z_score(long.full_test_df$neonatal_comp_total)
+neocomp_zscore <- scale(long.full_test_df$neonatal_comp_total)
 
 #Global Phenotypes
 neocomp_reg_table_global.long <- as.data.frame(t(sapply(long.full_test_df[, which(names(long.full_test_df) %in% paste0(global_phenotypes, ".long_centiles"))], function(x) {
@@ -7738,7 +7738,7 @@ neocomp_reg_table_full.long_sig_MC[!(neocomp_reg_table_full.long_sig_MC$label %i
 ####linear regressions
 ```{r}
 sum(!is.na(long.full_test_df$General_p.t1))
-gp_zscore <- z_score(long.full_test_df$General_p.t1)
+gp_zscore <- scale(long.full_test_df$General_p.t1)
 
 #Global Phenotypes
 gpt1_reg_table_global.long <- as.data.frame(t(sapply(long.full_test_df[, which(names(long.full_test_df) %in% paste0(global_phenotypes, ".long_centiles"))], function(x) {
@@ -7811,7 +7811,7 @@ gpt1_reg_table_full.long_sig_MC[!(gpt1_reg_table_full.long_sig_MC$label %in% plo
 ####linear regressions
 ```{r}
 sum(!is.na(long.full_test_df$General_p.t2))
-gp_zscore <- z_score(long.full_test_df$General_p.t2)
+gp_zscore <- scale(long.full_test_df$General_p.t2)
 
 #Global Phenotypes
 gpt2_reg_table_global.long <- as.data.frame(t(sapply(long.full_test_df[, which(names(long.full_test_df) %in% paste0(global_phenotypes, ".long_centiles"))], function(x) {
@@ -7884,8 +7884,8 @@ s
 ####linear regressions
 ```{r}
 sum(!is.na(long.full_test_df$General_p_change))
-gp_zscore <- z_score(long.full_test_df$General_p_change)
-gp_baseline_zscore <- z_score(long.full_test_df$General_p.t1)
+gp_zscore <- scale(long.full_test_df$General_p_change)
+gp_baseline_zscore <- scale(long.full_test_df$General_p.t1)
 
 #Global Phenotypes
 gpch_reg_table_global.long <- as.data.frame(t(sapply(long.full_test_df[, which(names(long.full_test_df) %in% paste0(global_phenotypes, ".long_centiles"))], function(x) {
@@ -7973,7 +7973,7 @@ gpch_reg_table_full.long_sig_MC[!(gpch_reg_table_full.long_sig_MC$label %in% plo
 ####linear regressions
 ```{r}
 sum(!is.na(long.full_test_df$gestAge) & !is.na(long.full_test_df$bweight_percentile))
-ga_zscore <- z_score(long.full_test_df$gestAge)
+ga_zscore <- scale(long.full_test_df$gestAge)
 bwp_zscore <- qnorm(long.full_test_df$bweight_percentile)
 
 #Global regression
@@ -8078,9 +8078,9 @@ bwpga_reg_table_full.long_sig_MC[!(bwpga_reg_table_full.long_sig_MC$label %in% p
 ###BW + BW PGS 
 ```{r}
 sum(!is.na(long.full_test_df$bw_pgs) & !is.na(long.full_test_df$birth_weight_oz_sum_adj))
-bw_pgs_zscore <- as.data.frame(sapply(long.full_test_df[,c("bw_pgs", "PC1", "PC2", "PC3", "PC4", "PC5", "PC6", "PC7", "PC8", "PC9", "PC10")], function(x) {z_score(x)}))
+bw_pgs_zscore <- as.data.frame(sapply(long.full_test_df[,c("bw_pgs", "PC1", "PC2", "PC3", "PC4", "PC5", "PC6", "PC7", "PC8", "PC9", "PC10")], function(x) {scale(x)}))
 #bw_pgs_zscore$bw_zscore <- qnorm(long.full_test_df$bweight_percentile)
-bw_pgs_zscore$bw_zscore <- z_score(long.full_test_df$birth_weight_oz_sum_adj)
+bw_pgs_zscore$bw_zscore <- scale(long.full_test_df$birth_weight_oz_sum_adj)
 
 #Global variables
 bwbwpgs_reg_table_global.long <- as.data.frame(t(sapply(long.full_test_df[, which(names(long.full_test_df) %in% paste0(global_phenotypes, ".long_centiles"))], function(x) {
@@ -8190,7 +8190,7 @@ bw_bwbwpgs_reg_table_full.long_sig_MC[!(bw_bwbwpgs_reg_table_full.long_sig_MC$la
 ####linear regressions
 ```{r}
 sum(!is.na(long.full_test_df$birth_weight_oz_sum_adj) & !is.na(long.full_test_df$combo.income_ordered) & !is.na(long.full_test_df$combo.prnt_edu_ordered))
-bw_zscore <- z_score(long.full_test_df$birth_weight_oz_sum_adj)
+bw_zscore <- scale(long.full_test_df$birth_weight_oz_sum_adj)
 
 #Global regression
 bw_ses_reg_table_global.long <- as.data.frame(t(sapply(long.full_test_df[, which(names(long.full_test_df) %in% paste0(global_phenotypes, ".long_centiles"))], function(x) {
@@ -8264,7 +8264,7 @@ bw_ses_reg_table_full.long_sig_MC[!(bw_ses_reg_table_full.long_sig_MC$label %in%
 ####linear regressions
 ```{r}
 sum(!is.na(long.full_test_df$bweight_percentile) & !is.na(long.full_test_df$combo.income_ordered) & !is.na(long.full_test_df$combo.prnt_edu_ordered))
-bwp_zscore <- z_score(long.full_test_df$bweight_percentile)
+bwp_zscore <- scale(long.full_test_df$bweight_percentile)
 
 #Global regression
 bwp_ses_reg_table_global.long <- as.data.frame(t(sapply(long.full_test_df[, which(names(long.full_test_df) %in% paste0(global_phenotypes, ".long_centiles"))], function(x) {
@@ -8338,8 +8338,8 @@ bwp_ses_reg_table_full.long_sig_MC[!(bwp_ses_reg_table_full.long_sig_MC$label %i
 ####linear regressions
 ```{r}
 sum(!is.na(long.full_test_df$General_p_change) & !is.na(long.full_test_df$combo.income_ordered) & !is.na(long.full_test_df$combo.prnt_edu_ordered))
-gp_zscore <- z_score(long.full_test_df$General_p_change)
-gp_baseline_zscore <- z_score(long.full_test_df$General_p.t1)
+gp_zscore <- scale(long.full_test_df$General_p_change)
+gp_baseline_zscore <- scale(long.full_test_df$General_p.t1)
 
 #Global regression
 gp_ses_reg_table_global.long <- as.data.frame(t(sapply(long.full_test_df[, which(names(long.full_test_df) %in% paste0(global_phenotypes, ".long_centiles"))], function(x) {
@@ -8415,9 +8415,9 @@ gp_ses_reg_table_full.long_sig_MC[!(gp_ses_reg_table_full.long_sig_MC$label %in%
 sum(!is.na(long.full_test_df$birth_weight_oz_sum_adj) & !is.na(long.full_test_df$anthroweightcalc.t2) & !is.na(long.full_test_df$anthroheightcalc.t2))
 
 df <- as.data.frame(long.full_test_df[,"src_subject_id"])
-df$weight_zscore <- z_score(long.full_test_df$anthroweightcalc.t2)
-df$height_zscore <- z_score(long.full_test_df$anthroheightcalc.t2)
-df$bw_zscore <- z_score(long.full_test_df$birth_weight_oz_sum_adj)
+df$weight_zscore <- scale(long.full_test_df$anthroweightcalc.t2)
+df$height_zscore <- scale(long.full_test_df$anthroheightcalc.t2)
+df$bw_zscore <- scale(long.full_test_df$birth_weight_oz_sum_adj)
 
 #Global phenotypes
 bw_wh_reg_table_global.long <- as.data.frame(t(sapply(long.full_test_df[, which(names(long.full_test_df) %in% paste0(global_phenotypes, ".long_centiles"))], function(x) {
@@ -8492,9 +8492,9 @@ bw_wh_reg_table_full.long_sig_MC[!(bw_wh_reg_table_full.long_sig_MC$label %in% p
 sum(!is.na(long.full_test_df$bweight_percentile) & !is.na(long.full_test_df$anthroweightcalc.t2) & !is.na(long.full_test_df$anthroheightcalc.t2))
 
 df <- as.data.frame(long.full_test_df[,"src_subject_id"])
-df$weight_zscore <- z_score(long.full_test_df$anthroweightcalc.t2)
-df$height_zscore <- z_score(long.full_test_df$anthroheightcalc.t2)
-df$bw_zscore <- z_score(long.full_test_df$bweight_percentile)
+df$weight_zscore <- scale(long.full_test_df$anthroweightcalc.t2)
+df$height_zscore <- scale(long.full_test_df$anthroheightcalc.t2)
+df$bw_zscore <- scale(long.full_test_df$bweight_percentile)
 
 #Global phenotypes
 bwp_wh_reg_table_global.long <- as.data.frame(t(sapply(long.full_test_df[, which(names(long.full_test_df) %in% paste0(global_phenotypes, ".long_centiles"))], function(x) {
@@ -8569,10 +8569,10 @@ bwp_wh_reg_table_full.long_sig_MC[!(bwp_wh_reg_table_full.long_sig_MC$label %in%
 sum(!is.na(long.full_test_df$General_p_change) & !is.na(long.full_test_df$anthroweightcalc.t2) & !is.na(long.full_test_df$anthroheightcalc.t2))
 
 df <- as.data.frame(long.full_test_df[,"src_subject_id"])
-df$weight_zscore <- z_score(long.full_test_df$anthroweightcalc.t2)
-df$height_zscore <- z_score(long.full_test_df$anthroheightcalc.t2)
-df$gp_zscore <- z_score(long.full_test_df$General_p_change)
-df$gp_baseline_zscore <- z_score(long.full_test_df$General_p.t1)
+df$weight_zscore <- scale(long.full_test_df$anthroweightcalc.t2)
+df$height_zscore <- scale(long.full_test_df$anthroheightcalc.t2)
+df$gp_zscore <- scale(long.full_test_df$General_p_change)
+df$gp_baseline_zscore <- scale(long.full_test_df$General_p.t1)
 
 
 #Global regression
@@ -8647,7 +8647,7 @@ gp_wh_reg_table_full.long_sig_MC[!(gp_wh_reg_table_full.long_sig_MC$label %in% p
 ###Gestational Age
 ####linear regressions
 ```{r}
-ga_zscore <- z_score(long.full_test_df$gestAge)
+ga_zscore <- scale(long.full_test_df$gestAge)
 total_volume_zcore <- qnorm(long.full_test_df$smri_vol_scs_wholeb.long_centiles)
 
 #Global phenotypes
@@ -8791,7 +8791,7 @@ tbv_ga_reg_table_full.long_sig_MC[!(tbv_ga_reg_table_full.long_sig_MC$label %in%
 ```{r}
 sum(!is.na(long.full_test_df$birth_weight_oz_sum_adj))
 df <- as.data.frame(long.full_test_df[,"src_subject_id"])
-df$bw_zscore <- z_score(long.full_test_df$birth_weight_oz_sum_adj)
+df$bw_zscore <- scale(long.full_test_df$birth_weight_oz_sum_adj)
 df$total_volume_zcore <- qnorm(long.full_test_df$smri_vol_scs_wholeb.long_centiles)
 
 #Global phenotypes -- save betas and p-values
@@ -9081,7 +9081,7 @@ tbv_bwp_reg_table_full.long_sig_MC[!(tbv_bwp_reg_table_full.long_sig_MC$label %i
 ####linear regressions
 ```{r}
 sum(!is.na(long.full_test_df$bw_pgs))
-bw_pgs_zscore <- as.data.frame(sapply(long.full_test_df[,c("bw_pgs", "PC1", "PC2", "PC3", "PC4", "PC5", "PC6", "PC7", "PC8", "PC9", "PC10")], function(x) {z_score(x)}))
+bw_pgs_zscore <- as.data.frame(sapply(long.full_test_df[,c("bw_pgs", "PC1", "PC2", "PC3", "PC4", "PC5", "PC6", "PC7", "PC8", "PC9", "PC10")], function(x) {scale(x)}))
 total_volume_zscore <- qnorm(long.full_test_df$smri_vol_scs_wholeb.long_centiles)
 
 #Global Phenotypes
@@ -9225,8 +9225,8 @@ tbv_bw_pgs_reg_table_full.long_sig_MC[!(tbv_bw_pgs_reg_table_full.long_sig_MC$la
 ####linear regressions
 ```{r}
 sum(!is.na(long.full_test_df$General_p_change))
-gp_zscore <- z_score(long.full_test_df$General_p_change)
-gp_baseline_zscore <- z_score(long.full_test_df$General_p.t1)
+gp_zscore <- scale(long.full_test_df$General_p_change)
+gp_baseline_zscore <- scale(long.full_test_df$General_p.t1)
 total_volume_zscore <- qnorm(long.full_test_df$smri_vol_scs_wholeb.long_centiles)
 
 #Global Phenotypes
