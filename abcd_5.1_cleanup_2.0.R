@@ -252,6 +252,8 @@ levels(abcd_anthro$eventname) <- c("t2", "t3", "t1")
 #Calculate a composite variable for total of neonatal complications
 baseline_data <- abcd_long %>% filter(eventname == "t1") #rows = 11264
 neonatal_vars <- c("devhx_14a3_p", "devhx_14b3_p", "devhx_14c3_p", "devhx_14d3_p", "devhx_14e3_p", "devhx_14f3_p", "devhx_14g3_p", "devhx_14h3_p")
+write.csv(baseline_data %>% select(all_of(c("src_subject_id", neonatal_vars))), 
+          paste0(out_folder,"abcd_long_afterQC_neonatal_baseline.csv"))
 #table for NAs and "don't know"s for each question
 lapply(baseline_data[, neonatal_vars], table, useNA = "ifany")
 #Replace "Don't Know" with NA.
