@@ -705,6 +705,13 @@ table1_save <- as_tibble(table1)
 
 write.csv(table1_save, paste0(save_path, "Table_One_", Sys.Date(),".csv"))
 
+#Neonatal comp total is added as a categorical (I can't fix the function above to see it as continuous), want to include as a continuous -- calculate mean and SD manually here.
+table1_df %>%
+  select(c("table_group", "neonatal_comp_total")) %>%
+  group_by(table_group) %>%
+ summarise(mean_value = mean(neonatal_comp_total, na.rm = TRUE),
+    sd_value = sd(neonatal_comp_total, na.rm = TRUE))
+
 # Create Supplemental Table 1 with additional variables
 table1_sup <- table1_df %>%
   select(table_group, anthroweightcalc, anthroheightcalc, combo.income_ordered, combo.prnt_edu_ordered, bw_pgs, neonatal_comp_total) %>%
