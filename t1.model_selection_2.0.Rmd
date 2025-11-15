@@ -8,11 +8,11 @@ editor_options:
 ---
 #Main Setup
 ```{r setup, include=FALSE}
-diagnostics <- FALSE
+diagnostics <- TRUE
 generate <- FALSE
 save_fits <- FALSE
 code_path <- "/mnt/isilon/bgdlab_processing/Eren/ABCD-braincharts/ABCD_premie_code/"
-fits_path <- "/mnt/isilon/bgdlab_processing/Eren/ABCD-braincharts/2.0_results/"
+fits_path <- "/mnt/isilon/bgdlab_processing/Eren/ABCD-braincharts/3.0_results/"
 data_path <- "/mnt/isilon/bgdlab_processing/Eren/ABCD-braincharts/CSV/process_tables_5.1_2.0/update/"
 knitr::opts_chunk$set(echo = TRUE)
 #Load libraries
@@ -205,7 +205,7 @@ pull <- function(data, var) {
 if (generate == TRUE){
 family_set <- c("BCT")
 phenotype_set <- phenotypes_to_fit
-out_folder <- "/mnt/isilon/bgdlab_processing/Eren/ABCD-braincharts/2.0_results/gamlss_models_t1_BCT_vol_2.0/"
+out_folder <- "/mnt/isilon/bgdlab_processing/Eren/ABCD-braincharts/3.0_results/gamlss_models_t1_BCT_vol_2.0/"
 
 terms_mu = c("~1", "age", "sex", "random(site)")
 terms_sigma = c("~1", "age", "sex")
@@ -225,7 +225,7 @@ generate_gamlss_models(phenotype_set,
 ##Generate additional models with age:sex interaction term
 ```{r}
 if (generate == TRUE){
-  models_folder <- "/mnt/isilon/bgdlab_processing/Eren/ABCD-braincharts/2.0_results/gamlss_models_t1_BCT_vol_2.0/"
+  models_folder <- "/mnt/isilon/bgdlab_processing/Eren/ABCD-braincharts/3.0_results/gamlss_models_t1_BCT_vol_2.0/"
   models <- list.files(models_folder, full.names = TRUE)
   ind <- stringr::str_extract(basename(models), "\\d+")
   end_ind <- max(as.numeric(ind))
@@ -246,10 +246,10 @@ if (generate == TRUE){
 ##Commands to fit the models
 Run fits submitting an array job.
 split 1
-sbatch array_script_submit.sh submit_gamlss_fits_ABCD_ONE.sh /mnt/isilon/bgdlab_processing/Eren/ABCD-braincharts/2.0_results/gamlss_models_t1_BCT_vol_2.0 "/mnt/isilon/bgdlab_processing/Eren/ABCD-braincharts/2.0_results/gamlss_models_t1_BCT_vol_2.0/" "/mnt/isilon/bgdlab_processing/Eren/ABCD-braincharts/CSV/process_tables_5.1_2.0/abcd_long_Onetrain2025-06-16.csv" "/mnt/isilon/bgdlab_processing/Eren/ABCD-braincharts/2.0_results/gamlss_fits_t1_BCT_vol_splitONE_2.0/" "/mnt/isilon/bgdlab_processing/Eren/ABCD-braincharts/2.0_results/gamlss_fits_t1_BCT_vol_splitONE_2.0/gamlss_fits_stats" "t1"
+sbatch array_script_submit.sh submit_gamlss_fits_ABCD_ONE.sh /mnt/isilon/bgdlab_processing/Eren/ABCD-braincharts/3.0_results/gamlss_models_t1_BCT_vol_2.0 "/mnt/isilon/bgdlab_processing/Eren/ABCD-braincharts/3.0_results/gamlss_models_t1_BCT_vol_2.0/" "/mnt/isilon/bgdlab_processing/Eren/ABCD-braincharts/CSV/process_tables_5.1_2.0/abcd_long_Onetrain2025-09-26.csv" "/mnt/isilon/bgdlab_processing/Eren/ABCD-braincharts/3.0_results/gamlss_fits_t1_BCT_vol_splitONE_2.0/" "/mnt/isilon/bgdlab_processing/Eren/ABCD-braincharts/3.0_results/gamlss_fits_t1_BCT_vol_splitONE_2.0/gamlss_fits_stats" "t1"
 
 split 2
-sbatch array_script_submit.sh submit_gamlss_fits_ABCD_TWO.sh /mnt/isilon/bgdlab_processing/Eren/ABCD-braincharts/2.0_results/gamlss_models_t1_BCT_vol_2.0 "/mnt/isilon/bgdlab_processing/Eren/ABCD-braincharts/2.0_results/gamlss_models_t1_BCT_vol_2.0/" "/mnt/isilon/bgdlab_processing/Eren/ABCD-braincharts/CSV/process_tables_5.1_2.0/abcd_long_Twotrain2025-06-16.csv" "/mnt/isilon/bgdlab_processing/Eren/ABCD-braincharts/2.0_results/gamlss_fits_t1_BCT_vol_splitTWO_2.0/" "/mnt/isilon/bgdlab_processing/Eren/ABCD-braincharts/2.0_results/gamlss_fits_t1_BCT_vol_splitTWO_2.0/gamlss_fits_stats" "t1"
+sbatch array_script_submit.sh submit_gamlss_fits_ABCD_TWO.sh /mnt/isilon/bgdlab_processing/Eren/ABCD-braincharts/3.0_results/gamlss_models_t1_BCT_vol_2.0 "/mnt/isilon/bgdlab_processing/Eren/ABCD-braincharts/3.0_results/gamlss_models_t1_BCT_vol_2.0/" "/mnt/isilon/bgdlab_processing/Eren/ABCD-braincharts/CSV/process_tables_5.1_2.0/abcd_long_Twotrain2025-09-26.csv" "/mnt/isilon/bgdlab_processing/Eren/ABCD-braincharts/3.0_results/gamlss_fits_t1_BCT_vol_splitTWO_2.0/" "/mnt/isilon/bgdlab_processing/Eren/ABCD-braincharts/3.0_results/gamlss_fits_t1_BCT_vol_splitTWO_2.0/gamlss_fits_stats" "t1"
 #Data Setup
 ##Define files
 ```{r}
@@ -259,10 +259,10 @@ splitTwo_folder <- paste0(fits_path, "gamlss_fits_t1_BCT_vol_splitTWO_2.0/")
 
 sOne_fits_stats_filename <- paste0(splitOne_folder, "gamlss_fits_stats_all.csv")
 sTwo_fits_stats_filename <- paste0(splitTwo_folder, "gamlss_fits_stats_all.csv")
-splitOne_train_filename <- paste0(data_path, "abcd_long_Onetrain2025-06-16.csv")
-splitTwo_train_filename <- paste0(data_path, "abcd_long_Twotrain2025-06-16.csv")
-splitOne_test_filename <- paste0(data_path, "abcd_long_Onetest2025-06-16.csv")
-splitTwo_test_filename <- paste0(data_path, "abcd_long_Twotest2025-06-16.csv")
+splitOne_train_filename <- paste0(data_path, "abcd_long_Onetrain2025-09-26.csv")
+splitTwo_train_filename <- paste0(data_path, "abcd_long_Twotrain2025-09-26.csv")
+splitOne_test_filename <- paste0(data_path, "abcd_long_Onetest2025-09-26.csv")
+splitTwo_test_filename <- paste0(data_path, "abcd_long_Twotest2025-09-26.csv")
 ```
 ##Load data frames and clean them up
 ```{r}
@@ -544,6 +544,7 @@ for(k in 1:length(breaks)){
 sum(sOne_wp_table$pcnt > 0.05)
 sOne_wp_toplot <- sOne_plots_wp[which(sOne_wp_table$pcnt > 0.05)]
 
+if (plot == TRUE){
 n <- length(sOne_wp_toplot)
 nCol <- min(c(floor(sqrt(n)), 4))
 nRow <- min(ceiling(n/nCol), 4)
@@ -555,6 +556,7 @@ for(k in 1:length(breaks)){
   start <- breaks[k] + 1
   end <- breaks[k+1]
   do.call("grid.arrange", c(sOne_wp_toplot[start:end], ncol=nCol))
+}
 }
 }
 ```
@@ -658,7 +660,6 @@ best_models_One <- lapply(sOne_best_list, readRDS)
 ###sTwo
 ####worm plots
 ```{r}
-#diagnostics = TRUE
 if(diagnostics == TRUE){
 plot <- FALSE
 sTwo_plots_wp <- vector(mode = "list", length = dim(sTwo_best)[1])
@@ -689,6 +690,7 @@ for(k in 1:length(breaks)){
 sum(sTwo_wp_table$pcnt > 0.05)
 sTwo_wp_toplot <- sTwo_plots_wp[which(sTwo_wp_table$pcnt > 0.05)]
 
+if (plot == TRUE){
 n <- length(sTwo_wp_toplot)
 nCol <- min(c(floor(sqrt(n)), 4))
 nRow <- min(ceiling(n/nCol), 4)
@@ -700,6 +702,7 @@ for(k in 1:length(breaks)){
   start <- breaks[k] + 1
   end <- breaks[k+1]
   do.call("grid.arrange", c(sTwo_wp_toplot[start:end], ncol=nCol))
+}
 }
 }
 ```
@@ -853,7 +856,7 @@ print(paste0("Correlation Coefficient Split Two, Train Data ", title_two, centcd
 ```
 
 #Predict Centiles
-predict centile scores for unseen split-half
+##predict centile scores for unseen split-half
 ```{r}
 plot <- FALSE
 print <- FALSE 
@@ -974,7 +977,6 @@ kstest_two %>% filter(p_adj < 0.05) %>% select(label)
 #Save Parameter Table for Best Models
 ##sOne
 ```{r}
-
 sOne_model_params_df <- data.frame(matrix(nrow = length(best_models_One), ncol = 18))
 names(sOne_model_params_df) <- c("group","pheno", "family", "BIC", "mu_intercept", "mu_age", "mu_sexM", "mu_agesexM",
                                  "mu_randomsite_var", "mu_randomsite_std", "mu_randomsite_lambda",
@@ -1013,8 +1015,8 @@ sOne_model_params_df$group <- ifelse(sOne_model_params_df$pheno %in% all_global_
 
 ##save table as csv
 filename <- "t1.sOne.modelparams.csv"
-if (!dir.exists(paste0(fits_path, "model_params_tables/"))) dir.create(paste0(fits_path, "model_params_tables/"))
-write.csv(sOne_model_params_df, paste0(fits_path, "model_params_tables/", filename))
+if (!dir.exists(paste0(fits_path, "model_params_tables_check/"))) dir.create(paste0(fits_path, "model_params_tables/"))
+write.csv(sOne_model_params_df, paste0(fits_path, "model_params_tables_check/", filename))
 ```
 ##sTwo
 ```{r}
@@ -1056,6 +1058,6 @@ sTwo_model_params_df$group <- ifelse(sTwo_model_params_df$pheno %in% all_global_
 
 ##save table as csv
 filename <- "t1.sTwo.modelparams.csv"
-if (!dir.exists(paste0(fits_path, "model_params_tables/"))) dir.create(paste0(fits_path, "model_params_tables/"))
-write.csv(sTwo_model_params_df, paste0(fits_path, "model_params_tables/", filename))
+if (!dir.exists(paste0(fits_path, "model_params_tables_check/"))) dir.create(paste0(fits_path, "model_params_tables/"))
+write.csv(sTwo_model_params_df, paste0(fits_path, "model_params_tables_check/", filename))
 ```
